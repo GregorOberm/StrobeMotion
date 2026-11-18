@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -7,52 +8,82 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+        rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
+            background-color: #f8fafc;
+            color: #0f172a;
             -webkit-tap-highlight-color: transparent;
             overflow-x: hidden;
         }
+
+        /* Alle abgerundeten Ecken an UI-Containern und Buttons entfernen */
+        button,
+        input:not([type="range"]),
+        select,
+        textarea,
+        div,
+        section,
+        aside,
+        header,
+        footer {
+            border-radius: 0 !important;
+        }
+
         .font-mono-num {
             font-family: 'JetBrains Mono', monospace;
             font-variant-numeric: tabular-nums;
+            letter-spacing: -0.02em;
         }
+
+        /* Slider mit runden Reglern auf kantiger Schiene */
         input[type="range"] {
             -webkit-appearance: none;
             appearance: none;
             background: transparent;
             cursor: pointer;
         }
+
         input[type="range"]::-webkit-slider-runnable-track {
-            background: #334155;
-            height: 0.45rem;
-            border-radius: 999px;
+            background: #cbd5e1;
+            height: 4px;
+            border-radius: 0;
         }
+
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            margin-top: -5px;
-            background-color: #38bdf8;
-            height: 1.15rem;
-            width: 1.15rem;
+            margin-top: -6px;
+            background-color: #0f172a;
+            border: 2px solid #ffffff;
+            height: 16px;
+            width: 16px;
             border-radius: 50%;
-            box-shadow: 0 0 10px rgba(56, 189, 248, 0.55);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
         }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background-color: #2563eb;
+        }
+
         input[type="range"]::-moz-range-track {
-            background: #334155;
-            height: 0.45rem;
-            border-radius: 999px;
+            background: #cbd5e1;
+            height: 4px;
+            border-radius: 0;
         }
+
         input[type="range"]::-moz-range-thumb {
-            background-color: #38bdf8;
-            height: 1.15rem;
-            width: 1.15rem;
-            border: none;
+            background-color: #0f172a;
+            border: 2px solid #ffffff;
+            height: 16px;
+            width: 16px;
             border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
         }
+
         /* Dual-Range-Slider für das Video-Trimmen */
         .dual-range-wrap {
             position: relative;
@@ -60,6 +91,7 @@
             display: flex;
             align-items: center;
         }
+
         .dual-range-wrap input[type="range"] {
             position: absolute;
             width: 100%;
@@ -67,64 +99,91 @@
             margin: 0;
             background: transparent;
         }
+
         .dual-range-wrap input[type="range"]::-webkit-slider-runnable-track {
             background: transparent;
-            height: 0.45rem;
+            height: 4px;
         }
+
         .dual-range-wrap input[type="range"]::-moz-range-track {
             background: transparent;
-            height: 0.45rem;
+            height: 4px;
         }
+
         .dual-range-wrap input[type="range"]::-webkit-slider-thumb {
             pointer-events: auto;
             position: relative;
             z-index: 20;
-            height: 1.35rem;
-            width: 1.35rem;
+            height: 18px;
+            width: 18px;
             margin-top: -7px;
-            border: 2px solid #0f172a;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
         }
+
         .dual-range-wrap input[type="range"]::-moz-range-thumb {
             pointer-events: auto;
             position: relative;
             z-index: 20;
-            height: 1.35rem;
-            width: 1.35rem;
-            border: 2px solid #0f172a;
+            height: 18px;
+            width: 18px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
         }
+
+        /* Start-Punkt (Grün) */
         #rng-trim-start::-webkit-slider-thumb {
-            background-color: #34d399;
-            box-shadow: 0 0 10px rgba(52, 211, 153, 0.65);
+            background-color: #059669;
         }
+
         #rng-trim-start::-moz-range-thumb {
-            background-color: #34d399;
+            background-color: #059669;
         }
+
+        /* End-Punkt (Orange) */
         #rng-trim-end::-webkit-slider-thumb {
-            background-color: #f59e0b;
-            box-shadow: 0 0 10px rgba(245, 158, 11, 0.65);
+            background-color: #d97706;
         }
+
         #rng-trim-end::-moz-range-thumb {
-            background-color: #f59e0b;
+            background-color: #d97706;
         }
+
+        /* Aufnahme-Punkt */
         @keyframes pulseRec {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.35; transform: scale(1.2); }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.2;
+            }
         }
+
         .rec-dot {
-            animation: pulseRec 1s infinite ease-in-out;
+            border-radius: 50% !important;
+            animation: pulseRec 1s steps(2, end) infinite;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+
+<body class="min-h-screen flex flex-col bg-slate-50 text-slate-900">
 
     <!-- Status- & Hinweis-Banner (ersetzt alert) -->
-    <div id="toast-area" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 w-11/12 max-w-md pointer-events-none"></div>
+    <div id="toast-area"
+        class="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 w-11/12 max-w-md pointer-events-none">
+    </div>
 
     <!-- Aufgeräumte Kopfzeile -->
-    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-30">
+    <header class="bg-white border-b border-slate-300 sticky top-0 z-30">
         <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-sky-500/20 border border-sky-400/30 flex items-center justify-center text-sky-400">
+                <div
+                    class="w-10 h-10 bg-slate-100 border border-slate-300 flex items-center justify-center text-slate-900">
                     <!-- Stroboskop-SVG Icon -->
                     <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="9" />
@@ -133,7 +192,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                    <h1 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
                         StrobeMotion
                     </h1>
                 </div>
@@ -148,87 +207,106 @@
         <div class="lg:col-span-7 flex flex-col gap-4">
 
             <!-- Modus-Tabs -->
-            <div class="bg-slate-900 p-1.5 rounded-2xl border border-slate-800 grid grid-cols-3 gap-1.5">
-                <button id="tab-camera" type="button" class="py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold transition bg-sky-600 text-white shadow">
+            <div class="bg-white p-1.5 border border-slate-300 grid grid-cols-3 gap-1.5">
+                <button id="tab-camera" type="button"
+                    class="py-2.5 px-3 text-xs sm:text-sm font-semibold transition bg-slate-900 text-white">
                     1. Live-Kamera
                 </button>
-                <button id="tab-upload" type="button" class="py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold transition text-slate-400 hover:text-white hover:bg-slate-800">
+                <button id="tab-upload" type="button"
+                    class="py-2.5 px-3 text-xs sm:text-sm font-semibold transition text-slate-600 hover:text-slate-900 hover:bg-slate-100">
                     2. Video hochladen
                 </button>
-                <button id="tab-result" type="button" class="py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold transition text-slate-400 hover:text-white hover:bg-slate-800 relative">
+                <button id="tab-result" type="button"
+                    class="py-2.5 px-3 text-xs sm:text-sm font-semibold transition text-slate-600 hover:text-slate-900 hover:bg-slate-100 relative">
                     3. Stroboskop-Bild
-                    <span id="dot-ready" class="hidden w-2.5 h-2.5 rounded-full bg-emerald-400 absolute top-2 right-2"></span>
+                    <span id="dot-ready" class="hidden w-2.5 h-2.5 bg-emerald-600 absolute top-2 right-2"></span>
                 </button>
             </div>
 
             <!-- Haupt-Bühne -->
-            <div class="relative w-full bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-2xl flex items-center justify-center min-h-[300px] sm:min-h-[420px]">
+            <div
+                class="relative w-full bg-white border border-slate-300 overflow-hidden shadow-sm flex items-center justify-center min-h-[300px] sm:min-h-[420px]">
 
                 <!-- ANSICHT 1: LIVE-KAMERA -->
                 <div id="panel-camera" class="w-full flex flex-col items-center justify-center relative">
-                    <video id="live-video" playsinline muted autoplay class="hidden w-full max-h-[58vh] object-contain bg-black"></video>
+                    <video id="live-video" playsinline muted autoplay
+                        class="hidden w-full max-h-[58vh] object-contain bg-black"></video>
 
                     <!-- Start-Bildschirm vor Kamera-Aktivierung -->
                     <div id="camera-init-box" class="p-8 text-center flex flex-col items-center gap-4">
-                        <div class="w-16 h-16 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center text-sky-400">
+                        <div
+                            class="w-16 h-16 bg-slate-100 border border-slate-300 flex items-center justify-center text-slate-700">
                             <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                <path
+                                    d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z">
+                                </path>
                                 <circle cx="12" cy="13" r="4"></circle>
                             </svg>
                         </div>
                         <div class="max-w-sm">
-                            <h2 class="text-base font-semibold text-white">Kamera für Live-Aufnahme starten</h2>
-                            <p class="text-xs text-slate-400 mt-1">Erfasst Einzelbilder direkt vom Kamerasensor ohne schwarze Startbilder auf dem iPad.</p>
+                            <h2 class="text-base font-semibold text-slate-900">Kamera für Live-Aufnahme starten</h2>
+                            <p class="text-xs text-slate-600 mt-1">Erfasst Einzelbilder direkt vom Kamerasensor ohne
+                                schwarze Startbilder auf dem iPad.</p>
                         </div>
-                        <button id="btn-start-cam" type="button" class="px-5 py-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-semibold text-sm shadow-lg shadow-sky-600/25 transition active:scale-95">
+                        <button id="btn-start-cam" type="button"
+                            class="px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition active:scale-95">
                             Kamera aktivieren
                         </button>
                     </div>
 
                     <!-- Countdown-Einblendung -->
-                    <div id="countdown-box" class="hidden absolute inset-0 bg-slate-950/80 backdrop-blur-sm flex flex-col items-center justify-center z-20">
-                        <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold mb-1">Aufnahme startet in</span>
-                        <div id="countdown-val" class="text-7xl font-bold font-mono-num text-white">2</div>
+                    <div id="countdown-box"
+                        class="hidden absolute inset-0 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center z-20">
+                        <span class="text-xs uppercase tracking-widest text-blue-700 font-semibold mb-1">Aufnahme
+                            startet in</span>
+                        <div id="countdown-val" class="text-7xl font-bold font-mono-num text-slate-900">2</div>
                     </div>
 
                     <!-- Live-Aufnahme-Status oben im Bild -->
-                    <div id="rec-hud" class="hidden absolute top-3 left-3 right-3 flex items-center justify-between gap-2 z-20 pointer-events-none">
-                        <div class="flex items-center gap-2 bg-red-600/95 px-3 py-1.5 rounded-full text-white text-xs font-bold shadow">
-                            <span class="w-2.5 h-2.5 rounded-full bg-white rec-dot"></span>
+                    <div id="rec-hud"
+                        class="hidden absolute top-3 left-3 right-3 flex items-center justify-between gap-2 z-20 pointer-events-none">
+                        <div class="flex items-center gap-2 bg-red-600 px-3 py-1.5 text-white text-xs font-bold">
+                            <span class="w-2.5 h-2.5 bg-white rec-dot"></span>
                             <span>AUFNAHME</span>
                         </div>
-                        <div id="rec-stats" class="bg-slate-950/85 px-3 py-1.5 rounded-full text-white font-mono-num text-xs border border-slate-700">
+                        <div id="rec-stats"
+                            class="bg-white/95 px-3 py-1.5 text-slate-900 font-mono-num text-xs border border-slate-300">
                             0,0 s | 0 Bilder
                         </div>
                     </div>
 
                     <!-- Kamera-Steuerleiste -->
-                    <div id="camera-bar" class="hidden w-full bg-slate-900 border-t border-slate-800 p-3 flex flex-wrap items-center justify-between gap-2">
-                        <button id="btn-flip-cam" type="button" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition">
+                    <div id="camera-bar"
+                        class="hidden w-full bg-slate-100 border-t border-slate-300 p-3 flex flex-wrap items-center justify-between gap-2">
+                        <button id="btn-flip-cam" type="button"
+                            class="px-3 py-2 bg-white hover:bg-slate-200 text-slate-800 text-xs font-medium border border-slate-300 transition">
                             Kamera wechseln
                         </button>
 
-                        <button id="btn-rec-toggle" type="button" class="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-semibold text-sm shadow-lg shadow-red-600/30 transition active:scale-95">
+                        <button id="btn-rec-toggle" type="button"
+                            class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white font-semibold text-sm transition active:scale-95">
                             Aufnahme starten
                         </button>
 
-                        <div class="flex items-center gap-2 text-xs text-slate-300">
+                        <div class="flex items-center gap-2 text-xs text-slate-700">
                             <label for="sel-duration">Dauer:</label>
-                            <select id="sel-duration" class="bg-slate-800 border border-slate-700 rounded-lg px-2 py-1.5 text-white font-mono-num">
+                            <select id="sel-duration"
+                                class="bg-white border border-slate-300 px-2 py-1.5 text-slate-900 font-mono-num">
                                 <option value="1">1 s</option>
                                 <option value="2">2 s</option>
                                 <option value="3">3 s</option>
                                 <option value="4" selected>4 s</option>
-                                <option value="5" >5 s</option>
+                                <option value="5">5 s</option>
                                 <option value="6">6 s</option>
                                 <option value="7">7 s</option>
                                 <option value="8">8 s</option>
                                 <option value="9">9 s</option>
                                 <option value="10">10 s</option>
-                                
+
                             </select>
                             <label for="sel-countdown">Vorlauf:</label>
-                            <select id="sel-countdown" class="bg-slate-800 border border-slate-700 rounded-lg px-2 py-1.5 text-white font-mono-num">
+                            <select id="sel-countdown"
+                                class="bg-white border border-slate-300 px-2 py-1.5 text-slate-900 font-mono-num">
                                 <option value="0">0 s</option>
                                 <option value="2" selected>2 s</option>
                                 <option value="3">3 s</option>
@@ -238,9 +316,12 @@
                 </div>
 
                 <!-- ANSICHT 2: VIDEO HOCHLADEN -->
-                <div id="panel-upload" class="hidden w-full p-6 sm:p-10 flex flex-col items-center justify-center text-center">
-                    <label for="file-video-input" id="drop-area" class="w-full max-w-lg border-2 border-dashed border-slate-700 hover:border-sky-500 bg-slate-800/40 hover:bg-slate-800/70 rounded-2xl p-8 cursor-pointer transition flex flex-col items-center gap-4">
-                        <div class="w-16 h-16 rounded-2xl bg-sky-500/15 text-sky-400 flex items-center justify-center border border-sky-500/25">
+                <div id="panel-upload"
+                    class="hidden w-full p-6 sm:p-10 flex flex-col items-center justify-center text-center">
+                    <label for="file-video-input" id="drop-area"
+                        class="w-full max-w-lg border-2 border-dashed border-slate-300 hover:border-blue-600 bg-slate-50 hover:bg-slate-100 p-8 cursor-pointer transition flex flex-col items-center gap-4">
+                        <div
+                            class="w-16 h-16 bg-white text-blue-600 flex items-center justify-center border border-slate-300">
                             <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                 <polyline points="17 8 12 3 7 8"></polyline>
@@ -248,115 +329,64 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="text-base font-semibold text-white">Video aus Mediathek / Dateien wählen</h3>
-                            <p class="text-xs text-slate-400 mt-1">Unterstützt MP4, MOV und WebM – ideal für iPad/iPhone Slow-Motion-Videos (120/240 fps)</p>
+                            <h3 class="text-base font-semibold text-slate-900">Video aus Mediathek / Dateien wählen</h3>
+                            <p class="text-xs text-slate-600 mt-1">Unterstützt MP4, MOV und WebM – ideal für iPad/iPhone
+                                Slow-Motion-Videos (120/240 fps)</p>
                         </div>
-                        <span class="px-4 py-2 rounded-xl bg-sky-600 text-white text-xs font-semibold shadow">Videodatei auswählen</span>
+                        <span class="px-4 py-2 bg-blue-600 text-white text-xs font-semibold">Videodatei auswählen</span>
                         <input id="file-video-input" type="file" accept="video/*" class="hidden">
                     </label>
-                    <p id="upload-filename" class="hidden text-xs text-emerald-400 mt-3 font-mono-num"></p>
+                    <p id="upload-filename" class="hidden text-xs text-emerald-700 mt-3 font-mono-num"></p>
                 </div>
 
                 <!-- ANSICHT 3: STROBOSKOP-ERGEBNIS -->
-                <div id="panel-result" class="hidden w-full flex flex-col items-center justify-center relative bg-black min-h-[300px]">
+                <div id="panel-result"
+                    class="hidden w-full flex flex-col items-center justify-center relative bg-slate-100 min-h-[300px]">
                     <canvas id="result-canvas" class="max-w-full max-h-[62vh] w-auto h-auto block"></canvas>
 
                     <!-- Fortschrittsanzeige -->
-                    <div id="busy-overlay" class="hidden absolute inset-0 bg-slate-950/90 backdrop-blur-sm flex flex-col items-center justify-center gap-3 z-20 p-4 text-center">
-                        <div class="w-10 h-10 border-4 border-sky-500 border-t-transparent rounded-full animate-spin"></div>
-                        <p id="busy-label" class="text-sm font-semibold text-white">Analysiere Bewegung...</p>
-                        <div class="w-52 h-2 bg-slate-800 rounded-full overflow-hidden">
-                            <div id="busy-bar" class="h-full bg-sky-500 w-0 transition-all duration-100"></div>
+                    <div id="busy-overlay"
+                        class="hidden absolute inset-0 bg-white/95 backdrop-blur-sm flex flex-col items-center justify-center gap-3 z-20 p-4 text-center">
+                        <div class="w-10 h-10 border-4 border-blue-600 border-t-transparent animate-spin"></div>
+                        <p id="busy-label" class="text-sm font-semibold text-slate-900">Analysiere Bewegung...</p>
+                        <div class="w-52 h-2 bg-slate-200 overflow-hidden">
+                            <div id="busy-bar" class="h-full bg-blue-600 w-0 transition-all duration-100"></div>
                         </div>
                     </div>
 
                     <!-- Platzhalter wenn noch kein Ergebnis vorliegt -->
                     <div id="empty-result-box" class="p-10 text-center flex flex-col items-center gap-2">
-                        <p class="text-sm font-medium text-slate-300">Noch kein Stroboskop-Bild vorhanden</p>
-                        <p class="text-xs text-slate-500 max-w-sm">Nehmen Sie ein Live-Video auf oder laden Sie eine Videodatei hoch, um die Bewegungsanalyse zu starten.</p>
+                        <p class="text-sm font-medium text-slate-800">Noch kein Stroboskop-Bild vorhanden</p>
+                        <p class="text-xs text-slate-500 max-w-sm">Nehmen Sie ein Live-Video auf oder laden Sie eine
+                            Videodatei hoch, um die Bewegungsanalyse zu starten.</p>
                     </div>
                 </div>
             </div>
 
-            <!-- VIDEO-TRIMMEN (Anfang & Ende kürzen) -->
-            <div id="trim-container" class="hidden bg-slate-900 rounded-2xl border border-slate-800 p-4 flex flex-col gap-3.5 shadow-xl">
-                <div class="flex flex-wrap items-center justify-between gap-2">
-                    <div class="flex items-center gap-2">
-                        <svg class="w-4 h-4 text-sky-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="6" cy="6" r="3"></circle>
-                            <circle cx="6" cy="18" r="3"></circle>
-                            <line x1="20" y1="4" x2="8.12" y2="15.88"></line>
-                            <line x1="14.47" y1="14.48" x2="20" y2="20"></line>
-                            <line x1="8.12" y1="8.12" x2="12" y2="12"></line>
-                        </svg>
-                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-200">Video-Bereich kürzen (Anfang &amp; Ende)</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                       
-                        <button id="btn-trim-reset" type="button" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs font-medium transition">
-                            Zurücksetzen
-                        </button>
-                    </div>
-                </div>
 
-                <!-- Visueller Zeitstrahl-Filmstreifen mit Abdunkelung der weggeschnittenen Bereiche -->
-                <div class="relative w-full h-14 rounded-xl overflow-hidden border border-slate-700 bg-slate-950 select-none">
-                    <div id="timeline-filmstrip" class="w-full h-full flex"></div>
-                    <!-- Abgedunkelter Bereich VOR Start -->
-                    <div id="timeline-mask-left" class="absolute top-0 bottom-0 left-0 bg-slate-950/80 border-r-2 border-emerald-400 transition-all duration-75" style="width: 0%;"></div>
-                    <!-- Aktiver Auswahlrahmen -->
-                    <div id="timeline-active-window" class="absolute top-0 bottom-0 border-y-2 border-sky-400/80 pointer-events-none" style="left: 0%; right: 0%;"></div>
-                    <!-- Abgedunkelter Bereich NACH Ende -->
-                    <div id="timeline-mask-right" class="absolute top-0 bottom-0 right-0 bg-slate-950/80 border-l-2 border-amber-400 transition-all duration-75" style="width: 0%;"></div>
-                </div>
-
-                <!-- Gekoppelter Dual-Range-Slider -->
-                <div class="px-1">
-                    <div class="dual-range-wrap">
-                        <div class="w-full h-2 bg-slate-800 rounded-full relative overflow-hidden">
-                            <div id="dual-range-fill" class="absolute top-0 bottom-0 bg-gradient-to-r from-emerald-400 via-sky-400 to-amber-400 rounded-full" style="left: 0%; right: 0%;"></div>
-                        </div>
-                        <input id="rng-trim-start" type="range" min="0" max="10" step="1" value="0" aria-label="Start-Zeitpunkt">
-                        <input id="rng-trim-end" type="range" min="0" max="10" step="1" value="10" aria-label="End-Zeitpunkt">
-                    </div>
-                </div>
-
-                <!-- Übersichtliche Anzeige von Start, Gekürzter Dauer, Aktiven Bildern & Ende -->
-                <div class="grid grid-cols-3 gap-2 text-center font-mono-num text-xs">
-                    <div class="bg-slate-950/90 p-2.5 rounded-xl border border-emerald-500/30">
-                        <span class="text-[10px] text-emerald-400 block font-sans font-semibold">Start-Zeitpunkt</span>
-                        <span id="lbl-trim-start" class="text-white font-semibold">0,000 s (Bild 1)</span>
-                    </div>
-                    <div class="bg-slate-950/90 p-2.5 rounded-xl border border-sky-500/30">
-                        <span class="text-[10px] text-sky-400 block font-sans font-semibold">Auswahl / Phasen</span>
-                        <span id="lbl-trim-summary" class="text-white font-semibold">0,00 s | 0 Bilder</span>
-                    </div>
-                    <div class="bg-slate-950/90 p-2.5 rounded-xl border border-amber-500/30">
-                        <span class="text-[10px] text-amber-400 block font-sans font-semibold">End-Zeitpunkt</span>
-                        <span id="lbl-trim-end" class="text-white font-semibold">0,000 s (Bild 1)</span>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- Rechte Spalte: Stroboskop-Steuerung & Export (5/12) -->
         <div class="lg:col-span-5 flex flex-col gap-4">
-            <div class="bg-slate-900 rounded-2xl border border-slate-800 p-5 flex flex-col gap-5 shadow-xl">
-                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                    <h2 class="font-semibold text-white text-base">Analyse-Parameter</h2>
-                    <span id="status-pill" class="text-xs font-mono-num text-slate-400 bg-slate-800 px-2.5 py-1 rounded-lg">Bereit</span>
+            <div class="bg-white border border-slate-300 p-5 flex flex-col gap-5 shadow-sm">
+                <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+                    <h2 class="font-semibold text-slate-900 text-base">Analyse-Parameter</h2>
+                    <span id="status-pill"
+                        class="text-xs font-mono-num text-slate-700 bg-slate-100 border border-slate-300 px-2.5 py-1">Bereit</span>
                 </div>
 
                 <!-- 1. Zeitabstand Δt -->
                 <div class="flex flex-col gap-2">
                     <div class="flex flex-wrap justify-between items-center gap-1">
-                        <label for="rng-interval" class="text-sm font-medium text-slate-200">Zeitabstand &Delta;t</label>
-                        <span id="lbl-interval" class="font-mono-num text-xs font-semibold text-sky-300 bg-sky-500/15 px-2.5 py-1 rounded-lg border border-sky-500/30">
+                        <label for="rng-interval" class="text-sm font-medium text-slate-800">Zeitabstand
+                            &Delta;t</label>
+                        <span id="lbl-interval"
+                            class="font-mono-num text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-1 border border-blue-200">
                             40 ms ( 25 Hz)
                         </span>
                     </div>
                     <input id="rng-interval" type="range" min="5" max="1000" step="5" value="40" class="w-full">
-                    <div class="flex justify-between items-center text-[11px] text-slate-400 font-mono-num">
+                    <div class="flex justify-between items-center text-[11px] text-slate-500 font-mono-num">
                         <span>5 ms</span>
                         <span>1000 ms</span>
                     </div>
@@ -365,21 +395,96 @@
                 <!-- 2. Empfindlichkeit -->
                 <div class="flex flex-col gap-2">
                     <div class="flex justify-between items-center">
-                        <label for="rng-sensitivity" class="text-sm font-medium text-slate-200">Empfindlichkeit (Objekt-Freistellung)</label>
-                        <span id="lbl-sensitivity" class="font-mono-num text-xs font-semibold text-amber-300 bg-amber-500/15 px-2.5 py-1 rounded-lg border border-amber-500/30">35</span>
+                        <label for="rng-sensitivity" class="text-sm font-medium text-slate-800">Empfindlichkeit
+                            (Objekt-Freistellung)</label>
+                        <span id="lbl-sensitivity"
+                            class="font-mono-num text-xs font-semibold text-amber-800 bg-amber-50 px-2.5 py-1 border border-amber-200">35</span>
                     </div>
                     <input id="rng-sensitivity" type="range" min="10" max="120" step="1" value="35" class="w-full">
-                    <p class="text-xs text-slate-400">Kleiner Wert = erkennt feine Kontraste. Großer Wert = unterdrückt Schatten &amp; Rauschen.</p>
+                    <p class="text-xs text-slate-600">Kleiner Wert = erkennt feine Kontraste. Großer Wert = unterdrückt
+                        Schatten &amp; Rauschen.</p>
                 </div>
 
                 <!-- 3. Export-Button -->
-                <button id="btn-export" type="button" disabled class="w-full py-3.5 px-4 rounded-xl bg-sky-600 hover:bg-sky-500 disabled:bg-slate-800 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-semibold text-sm shadow-lg shadow-sky-600/20 transition active:scale-95">
+                <button id="btn-export" type="button" disabled
+                    class="w-full py-3.5 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-semibold text-sm transition active:scale-95">
                     Stroboskop-Bild als PNG speichern
                 </button>
             </div>
+            <!-- VIDEO-TRIMMEN (Anfang & Ende kürzen) -->
+            <div id="trim-container"
+                class="hidden bg-white border border-slate-300 p-4 flex flex-col gap-3.5 shadow-sm">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-slate-700" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="6" cy="6" r="3"></circle>
+                            <circle cx="6" cy="18" r="3"></circle>
+                            <line x1="20" y1="4" x2="8.12" y2="15.88"></line>
+                            <line x1="14.47" y1="14.48" x2="20" y2="20"></line>
+                            <line x1="8.12" y1="8.12" x2="12" y2="12"></line>
+                        </svg>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-800">Video-Bereich kürzen
+                            (Anfang &amp; Ende)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
 
-            
+                        <button id="btn-trim-reset" type="button"
+                            class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 text-xs font-medium transition">
+                            Zurücksetzen
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Visueller Zeitstrahl-Filmstreifen mit Abdunkelung der weggeschnittenen Bereiche -->
+                <div class="relative w-full h-14 overflow-hidden border border-slate-300 bg-slate-200 select-none">
+                    <div id="timeline-filmstrip" class="w-full h-full flex"></div>
+                    <!-- Abgedunkelter Bereich VOR Start -->
+                    <div id="timeline-mask-left"
+                        class="absolute top-0 bottom-0 left-0 bg-slate-900/65 border-r-2 border-emerald-600 transition-all duration-75"
+                        style="width: 0%;"></div>
+                    <!-- Aktiver Auswahlrahmen -->
+                    <div id="timeline-active-window"
+                        class="absolute top-0 bottom-0 border-y-2 border-blue-600 pointer-events-none"
+                        style="left: 0%; right: 0%;"></div>
+                    <!-- Abgedunkelter Bereich NACH Ende -->
+                    <div id="timeline-mask-right"
+                        class="absolute top-0 bottom-0 right-0 bg-slate-900/65 border-l-2 border-amber-600 transition-all duration-75"
+                        style="width: 0%;"></div>
+                </div>
+
+                <!-- Gekoppelter Dual-Range-Slider -->
+                <div class="px-1">
+                    <div class="dual-range-wrap">
+                        <div class="w-full h-2 bg-slate-200 relative overflow-hidden">
+                            <div id="dual-range-fill" class="absolute top-0 bottom-0 bg-slate-400"
+                                style="left: 0%; right: 0%;"></div>
+                        </div>
+                        <input id="rng-trim-start" type="range" min="0" max="10" step="1" value="0"
+                            aria-label="Start-Zeitpunkt">
+                        <input id="rng-trim-end" type="range" min="0" max="10" step="1" value="10"
+                            aria-label="End-Zeitpunkt">
+                    </div>
+                </div>
+
+                <!-- Übersichtliche Anzeige von Start, Gekürzter Dauer, Aktiven Bildern & Ende -->
+                <div class="grid grid-cols-3 gap-2 text-center font-mono-num text-xs">
+                    <div class="bg-slate-50 p-2.5 border border-emerald-300">
+                        <span class="text-[10px] text-emerald-700 block font-sans font-semibold">Start-Zeitpunkt</span>
+                        <span id="lbl-trim-start" class="text-slate-900 font-semibold">0,000 s (Bild 1)</span>
+                    </div>
+                    <div class="bg-slate-50 p-2.5 border border-blue-300">
+                        <span class="text-[10px] text-blue-700 block font-sans font-semibold">Auswahl / Phasen</span>
+                        <span id="lbl-trim-summary" class="text-slate-900 font-semibold">0,00 s | 0 Bilder</span>
+                    </div>
+                    <div class="bg-slate-50 p-2.5 border border-amber-300">
+                        <span class="text-[10px] text-amber-700 block font-sans font-semibold">End-Zeitpunkt</span>
+                        <span id="lbl-trim-end" class="text-slate-900 font-semibold">0,000 s (Bild 1)</span>
+                    </div>
+                </div>
             </div>
+
+        </div>
         </div>
     </main>
 
@@ -387,412 +492,276 @@
     <video id="hidden-video" playsinline muted preload="auto" class="hidden"></video>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        'use strict';
+        document.addEventListener('DOMContentLoaded', function () {
+            'use strict';
 
-        // =====================================================================
-        // 1. ZENTRALER ZUSTAND & DOM-REFERENZEN
-        // =====================================================================
-        const state = {
-            tab: 'camera',
-            stream: null,
-            facingMode: 'environment',
-            isRecording: false,
-            rafId: null,
-            frames: [],          // { time, imageData, width, height, enabled, thumbUrl }
-            trimStartIdx: 0,     // Index des ersten aktiven Frames (Anfang abschneiden)
-            trimEndIdx: 0,       // Index des letzten aktiven Frames (Ende abschneiden)
-            background: null,    // ImageData des statischen Hintergrunds
-            width: 0,
-            height: 0,
-            intervalMs: 40,
-            mode1to1: false,
-            sensitivity: 35
-        };
-
-        const el = {
-            toastArea: document.getElementById('toast-area'),
-
-            tabCamera: document.getElementById('tab-camera'),
-            tabUpload: document.getElementById('tab-upload'),
-            tabResult: document.getElementById('tab-result'),
-            dotReady: document.getElementById('dot-ready'),
-
-            panelCamera: document.getElementById('panel-camera'),
-            panelUpload: document.getElementById('panel-upload'),
-            panelResult: document.getElementById('panel-result'),
-
-            liveVideo: document.getElementById('live-video'),
-            cameraInitBox: document.getElementById('camera-init-box'),
-            btnStartCam: document.getElementById('btn-start-cam'),
-            countdownBox: document.getElementById('countdown-box'),
-            countdownVal: document.getElementById('countdown-val'),
-            recHud: document.getElementById('rec-hud'),
-            recStats: document.getElementById('rec-stats'),
-            cameraBar: document.getElementById('camera-bar'),
-            btnFlipCam: document.getElementById('btn-flip-cam'),
-            btnRecToggle: document.getElementById('btn-rec-toggle'),
-            selDuration: document.getElementById('sel-duration'),
-            selCountdown: document.getElementById('sel-countdown'),
-
-            fileVideoInput: document.getElementById('file-video-input'),
-            dropArea: document.getElementById('drop-area'),
-            uploadFilename: document.getElementById('upload-filename'),
-            hiddenVideo: document.getElementById('hidden-video'),
-
-            resultCanvas: document.getElementById('result-canvas'),
-            busyOverlay: document.getElementById('busy-overlay'),
-            busyLabel: document.getElementById('busy-label'),
-            busyBar: document.getElementById('busy-bar'),
-            emptyResultBox: document.getElementById('empty-result-box'),
-
-            trimContainer: document.getElementById('trim-container'),
-            timelineFilmstrip: document.getElementById('timeline-filmstrip'),
-            timelineMaskLeft: document.getElementById('timeline-mask-left'),
-            timelineActiveWindow: document.getElementById('timeline-active-window'),
-            timelineMaskRight: document.getElementById('timeline-mask-right'),
-            dualRangeFill: document.getElementById('dual-range-fill'),
-            rngTrimStart: document.getElementById('rng-trim-start'),
-            rngTrimEnd: document.getElementById('rng-trim-end'),
-            lblTrimStart: document.getElementById('lbl-trim-start'),
-            lblTrimSummary: document.getElementById('lbl-trim-summary'),
-            lblTrimEnd: document.getElementById('lbl-trim-end'),
-            btnRecalcBg: document.getElementById('btn-recalc-bg'),
-            btnTrimReset: document.getElementById('btn-trim-reset'),
-
-            statusPill: document.getElementById('status-pill'),
-            rngInterval: document.getElementById('rng-interval'),
-            lblInterval: document.getElementById('lbl-interval'),
-            btnMode1to1: document.getElementById('btn-mode-1to1'),
-            rngSensitivity: document.getElementById('rng-sensitivity'),
-            lblSensitivity: document.getElementById('lbl-sensitivity'),
-            btnExport: document.getElementById('btn-export'),
-
-         
-        };
-
-        // =====================================================================
-        // 2. HILFSFUNKTIONEN (TOAST, SCHWARZBILD-FILTER, MEDIAN-HINTERGRUND)
-        // =====================================================================
-        function notify(message, type) {
-            const colors = {
-                info: 'bg-slate-800 border-sky-500/60 text-sky-100',
-                success: 'bg-emerald-950/95 border-emerald-500/60 text-emerald-100',
-                error: 'bg-red-950/95 border-red-500/60 text-red-100'
+            // =====================================================================
+            // 1. ZENTRALER ZUSTAND & DOM-REFERENZEN
+            // =====================================================================
+            const state = {
+                tab: 'camera',
+                stream: null,
+                facingMode: 'environment',
+                isRecording: false,
+                rafId: null,
+                frames: [],          // { time, imageData, width, height, enabled, thumbUrl }
+                trimStartIdx: 0,     // Index des ersten aktiven Frames (Anfang abschneiden)
+                trimEndIdx: 0,       // Index des letzten aktiven Frames (Ende abschneiden)
+                background: null,    // ImageData des statischen Hintergrunds
+                width: 0,
+                height: 0,
+                intervalMs: 40,
+                mode1to1: false,
+                sensitivity: 35
             };
-            const div = document.createElement('div');
-            div.className = 'px-4 py-3 rounded-xl border shadow-xl text-xs sm:text-sm font-medium backdrop-blur-md transition-all ' + (colors[type] || colors.info);
-            div.textContent = message;
-            el.toastArea.appendChild(div);
-            setTimeout(function () {
-                div.style.opacity = '0';
-                setTimeout(function () { div.remove(); }, 250);
-            }, 3400);
-        }
 
-        // Prüft zuverlässig auf schwarze Startbilder (iPad / Safari Bug-Schutz)
-        function isFrameBlack(imageData) {
-            const data = imageData.data;
-            const step = 64; // Jedes 16. Pixel prüfen (sehr schnell)
-            let sampleCount = 0;
-            let nearBlackCount = 0;
-            let lumaSum = 0;
+            const el = {
+                toastArea: document.getElementById('toast-area'),
 
-            for (let i = 0; i < data.length; i += step) {
-                const r = data[i];
-                const g = data[i + 1];
-                const b = data[i + 2];
-                const luma = 0.299 * r + 0.587 * g + 0.114 * b;
-                lumaSum += luma;
-                if (r < 10 && g < 10 && b < 10) {
-                    nearBlackCount++;
+                tabCamera: document.getElementById('tab-camera'),
+                tabUpload: document.getElementById('tab-upload'),
+                tabResult: document.getElementById('tab-result'),
+                dotReady: document.getElementById('dot-ready'),
+
+                panelCamera: document.getElementById('panel-camera'),
+                panelUpload: document.getElementById('panel-upload'),
+                panelResult: document.getElementById('panel-result'),
+
+                liveVideo: document.getElementById('live-video'),
+                cameraInitBox: document.getElementById('camera-init-box'),
+                btnStartCam: document.getElementById('btn-start-cam'),
+                countdownBox: document.getElementById('countdown-box'),
+                countdownVal: document.getElementById('countdown-val'),
+                recHud: document.getElementById('rec-hud'),
+                recStats: document.getElementById('rec-stats'),
+                cameraBar: document.getElementById('camera-bar'),
+                btnFlipCam: document.getElementById('btn-flip-cam'),
+                btnRecToggle: document.getElementById('btn-rec-toggle'),
+                selDuration: document.getElementById('sel-duration'),
+                selCountdown: document.getElementById('sel-countdown'),
+
+                fileVideoInput: document.getElementById('file-video-input'),
+                dropArea: document.getElementById('drop-area'),
+                uploadFilename: document.getElementById('upload-filename'),
+                hiddenVideo: document.getElementById('hidden-video'),
+
+                resultCanvas: document.getElementById('result-canvas'),
+                busyOverlay: document.getElementById('busy-overlay'),
+                busyLabel: document.getElementById('busy-label'),
+                busyBar: document.getElementById('busy-bar'),
+                emptyResultBox: document.getElementById('empty-result-box'),
+
+                trimContainer: document.getElementById('trim-container'),
+                timelineFilmstrip: document.getElementById('timeline-filmstrip'),
+                timelineMaskLeft: document.getElementById('timeline-mask-left'),
+                timelineActiveWindow: document.getElementById('timeline-active-window'),
+                timelineMaskRight: document.getElementById('timeline-mask-right'),
+                dualRangeFill: document.getElementById('dual-range-fill'),
+                rngTrimStart: document.getElementById('rng-trim-start'),
+                rngTrimEnd: document.getElementById('rng-trim-end'),
+                lblTrimStart: document.getElementById('lbl-trim-start'),
+                lblTrimSummary: document.getElementById('lbl-trim-summary'),
+                lblTrimEnd: document.getElementById('lbl-trim-end'),
+                btnRecalcBg: document.getElementById('btn-recalc-bg'),
+                btnTrimReset: document.getElementById('btn-trim-reset'),
+
+                statusPill: document.getElementById('status-pill'),
+                rngInterval: document.getElementById('rng-interval'),
+                lblInterval: document.getElementById('lbl-interval'),
+                btnMode1to1: document.getElementById('btn-mode-1to1'),
+                rngSensitivity: document.getElementById('rng-sensitivity'),
+                lblSensitivity: document.getElementById('lbl-sensitivity'),
+                btnExport: document.getElementById('btn-export'),
+
+
+            };
+
+            // =====================================================================
+            // 2. HILFSFUNKTIONEN (TOAST, SCHWARZBILD-FILTER, MEDIAN-HINTERGRUND)
+            // =====================================================================
+            function notify(message, type) {
+                const colors = {
+                    info: 'bg-white border-blue-500 text-slate-900',
+                    success: 'bg-emerald-50 border-emerald-600 text-emerald-950',
+                    error: 'bg-red-50 border-red-600 text-red-950'
+                };
+                const div = document.createElement('div');
+                div.className = 'px-4 py-3 border shadow-md text-xs sm:text-sm font-medium transition-all ' + (colors[type] || colors.info);
+                div.textContent = message;
+                el.toastArea.appendChild(div);
+                setTimeout(function () {
+                    div.style.opacity = '0';
+                    setTimeout(function () {div.remove();}, 250);
+                }, 3400);
+            }
+
+            // Prüft zuverlässig auf schwarze Startbilder (iPad / Safari Bug-Schutz)
+            function isFrameBlack(imageData) {
+                const data = imageData.data;
+                const step = 64; // Jedes 16. Pixel prüfen (sehr schnell)
+                let sampleCount = 0;
+                let nearBlackCount = 0;
+                let lumaSum = 0;
+
+                for (let i = 0; i < data.length; i += step) {
+                    const r = data[i];
+                    const g = data[i + 1];
+                    const b = data[i + 2];
+                    const luma = 0.299 * r + 0.587 * g + 0.114 * b;
+                    lumaSum += luma;
+                    if (r < 10 && g < 10 && b < 10) {
+                        nearBlackCount++;
+                    }
+                    sampleCount++;
                 }
-                sampleCount++;
+
+                if (sampleCount === 0) return true;
+                const avgLuma = lumaSum / sampleCount;
+                const blackRatio = nearBlackCount / sampleCount;
+                return avgLuma < 5 || blackRatio > 0.95;
             }
 
-            if (sampleCount === 0) return true;
-            const avgLuma = lumaSum / sampleCount;
-            const blackRatio = nearBlackCount / sampleCount;
-            return avgLuma < 5 || blackRatio > 0.95;
-        }
-
-        // Berechnet den sauberen statischen Hintergrund per pixelweisem Median aus dem gewählten Frame-Bereich
-        function computeMedianBackground(frameSubset, width, height) {
-            if (!frameSubset || frameSubset.length === 0) return null;
-            const maxSamples = Math.min(frameSubset.length, 9);
-            const sampled = [];
-            for (let i = 0; i < maxSamples; i++) {
-                const idx = Math.floor((i * (frameSubset.length - 1)) / Math.max(1, maxSamples - 1));
-                sampled.push(frameSubset[idx].imageData.data);
-            }
-
-            const totalBytes = width * height * 4;
-            const bgData = new Uint8ClampedArray(totalBytes);
-            const n = sampled.length;
-            const mid = Math.floor(n / 2);
-            const rArr = new Uint8Array(n);
-            const gArr = new Uint8Array(n);
-            const bArr = new Uint8Array(n);
-
-            for (let p = 0; p < totalBytes; p += 4) {
-                for (let k = 0; k < n; k++) {
-                    rArr[k] = sampled[k][p];
-                    gArr[k] = sampled[k][p + 1];
-                    bArr[k] = sampled[k][p + 2];
+            // Berechnet den sauberen statischen Hintergrund per pixelweisem Median aus dem gewählten Frame-Bereich
+            function computeMedianBackground(frameSubset, width, height) {
+                if (!frameSubset || frameSubset.length === 0) return null;
+                const maxSamples = Math.min(frameSubset.length, 9);
+                const sampled = [];
+                for (let i = 0; i < maxSamples; i++) {
+                    const idx = Math.floor((i * (frameSubset.length - 1)) / Math.max(1, maxSamples - 1));
+                    sampled.push(frameSubset[idx].imageData.data);
                 }
-                rArr.sort();
-                gArr.sort();
-                bArr.sort();
-                bgData[p] = rArr[mid];
-                bgData[p + 1] = gArr[mid];
-                bgData[p + 2] = bArr[mid];
-                bgData[p + 3] = 255;
-            }
-            return new ImageData(bgData, width, height);
-        }
 
-        function setTab(tabName) {
-            state.tab = tabName;
-            const tabs = [
-                { id: 'camera', btn: el.tabCamera, panel: el.panelCamera },
-                { id: 'upload', btn: el.tabUpload, panel: el.panelUpload },
-                { id: 'result', btn: el.tabResult, panel: el.panelResult }
-            ];
-            tabs.forEach(function (item) {
-                if (item.id === tabName) {
-                    item.btn.className = 'py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold transition bg-sky-600 text-white shadow';
-                    item.panel.classList.remove('hidden');
+                const totalBytes = width * height * 4;
+                const bgData = new Uint8ClampedArray(totalBytes);
+                const n = sampled.length;
+                const mid = Math.floor(n / 2);
+                const rArr = new Uint8Array(n);
+                const gArr = new Uint8Array(n);
+                const bArr = new Uint8Array(n);
+
+                for (let p = 0; p < totalBytes; p += 4) {
+                    for (let k = 0; k < n; k++) {
+                        rArr[k] = sampled[k][p];
+                        gArr[k] = sampled[k][p + 1];
+                        bArr[k] = sampled[k][p + 2];
+                    }
+                    rArr.sort();
+                    gArr.sort();
+                    bArr.sort();
+                    bgData[p] = rArr[mid];
+                    bgData[p + 1] = gArr[mid];
+                    bgData[p + 2] = bArr[mid];
+                    bgData[p + 3] = 255;
+                }
+                return new ImageData(bgData, width, height);
+            }
+
+            function setTab(tabName) {
+                state.tab = tabName;
+                const tabs = [
+                    {id: 'camera', btn: el.tabCamera, panel: el.panelCamera},
+                    {id: 'upload', btn: el.tabUpload, panel: el.panelUpload},
+                    {id: 'result', btn: el.tabResult, panel: el.panelResult}
+                ];
+                tabs.forEach(function (item) {
+                    if (item.id === tabName) {
+                        item.btn.className = 'py-2.5 px-3 text-xs sm:text-sm font-semibold transition bg-slate-900 text-white relative';
+                        item.panel.classList.remove('hidden');
+                    } else {
+                        item.btn.className = 'py-2.5 px-3 text-xs sm:text-sm font-semibold transition text-slate-600 hover:text-slate-900 hover:bg-slate-100 relative';
+                        item.panel.classList.add('hidden');
+                    }
+                });
+            }
+
+            el.tabCamera.addEventListener('click', function () {setTab('camera');});
+            el.tabUpload.addEventListener('click', function () {setTab('upload');});
+            el.tabResult.addEventListener('click', function () {setTab('result');});
+
+            // =====================================================================
+            // 3. LIVE-KAMERA & DIREKTES CANVAS-SAMPLING (KEINE BLACK-FRAMES AUF IPAD)
+            // =====================================================================
+            async function startCamera() {
+                try {
+                    if (state.stream) {
+                        state.stream.getTracks().forEach(function (t) {t.stop();});
+                    }
+                    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                        notify('Kamera-API wird in diesem Browser nicht unterstützt. Bitte Video-Upload nutzen.', 'error');
+                        return;
+                    }
+                    const stream = await navigator.mediaDevices.getUserMedia({
+                        audio: false,
+                        video: {
+                            facingMode: {ideal: state.facingMode},
+                            width: {ideal: 1280},
+                            height: {ideal: 720},
+                            frameRate: {ideal: 60}
+                        }
+                    });
+                    state.stream = stream;
+                    el.liveVideo.srcObject = stream;
+                    el.liveVideo.setAttribute('playsinline', '');
+                    el.liveVideo.muted = true;
+
+                    await new Promise(function (resolve) {
+                        if (el.liveVideo.readyState >= 2 && el.liveVideo.videoWidth > 0) {
+                            resolve();
+                        } else {
+                            el.liveVideo.onloadeddata = function () {resolve();};
+                        }
+                    });
+                    await el.liveVideo.play();
+
+                    el.cameraInitBox.classList.add('hidden');
+                    el.liveVideo.classList.remove('hidden');
+                    el.cameraBar.classList.remove('hidden');
+                } catch (err) {
+                    console.error(err);
+                    notify('Kamera-Zugriff blockiert oder nicht verfügbar. Nutzen Sie „Video hochladen“.', 'error');
+                }
+            }
+
+            el.btnStartCam.addEventListener('click', startCamera);
+            el.btnFlipCam.addEventListener('click', function () {
+                state.facingMode = (state.facingMode === 'environment') ? 'user' : 'environment';
+                startCamera();
+            });
+
+            let stopLiveCaptureFn = null;
+
+            el.btnRecToggle.addEventListener('click', function () {
+                if (state.isRecording) {
+                    if (stopLiveCaptureFn) stopLiveCaptureFn();
+                    return;
+                }
+                if (!state.stream || el.liveVideo.videoWidth === 0) {
+                    notify('Bitte zuerst die Kamera aktivieren.', 'info');
+                    return;
+                }
+
+                const countdownSec = parseInt(el.selCountdown.value, 10);
+                if (countdownSec > 0) {
+                    let remaining = countdownSec;
+                    el.countdownVal.textContent = String(remaining);
+                    el.countdownBox.classList.remove('hidden');
+                    const timer = setInterval(function () {
+                        remaining--;
+                        if (remaining > 0) {
+                            el.countdownVal.textContent = String(remaining);
+                        } else {
+                            clearInterval(timer);
+                            el.countdownBox.classList.add('hidden');
+                            beginDirectFrameCapture();
+                        }
+                    }, 1000);
                 } else {
-                    item.btn.className = 'py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold transition text-slate-400 hover:text-white hover:bg-slate-800 relative';
-                    item.panel.classList.add('hidden');
+                    beginDirectFrameCapture();
                 }
             });
-        }
 
-        el.tabCamera.addEventListener('click', function () { setTab('camera'); });
-        el.tabUpload.addEventListener('click', function () { setTab('upload'); });
-        el.tabResult.addEventListener('click', function () { setTab('result'); });
-
-        // =====================================================================
-        // 3. LIVE-KAMERA & DIREKTES CANVAS-SAMPLING (KEINE BLACK-FRAMES AUF IPAD)
-        // =====================================================================
-        async function startCamera() {
-            try {
-                if (state.stream) {
-                    state.stream.getTracks().forEach(function (t) { t.stop(); });
-                }
-                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                    notify('Kamera-API wird in diesem Browser nicht unterstützt. Bitte Video-Upload nutzen.', 'error');
-                    return;
-                }
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    audio: false,
-                    video: {
-                        facingMode: { ideal: state.facingMode },
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 },
-                        frameRate: { ideal: 60 }
-                    }
-                });
-                state.stream = stream;
-                el.liveVideo.srcObject = stream;
-                el.liveVideo.setAttribute('playsinline', '');
-                el.liveVideo.muted = true;
-
-                await new Promise(function (resolve) {
-                    if (el.liveVideo.readyState >= 2 && el.liveVideo.videoWidth > 0) {
-                        resolve();
-                    } else {
-                        el.liveVideo.onloadeddata = function () { resolve(); };
-                    }
-                });
-                await el.liveVideo.play();
-
-                el.cameraInitBox.classList.add('hidden');
-                el.liveVideo.classList.remove('hidden');
-                el.cameraBar.classList.remove('hidden');
-            } catch (err) {
-                console.error(err);
-                notify('Kamera-Zugriff blockiert oder nicht verfügbar. Nutzen Sie „Video hochladen“.', 'error');
-            }
-        }
-
-        el.btnStartCam.addEventListener('click', startCamera);
-        el.btnFlipCam.addEventListener('click', function () {
-            state.facingMode = (state.facingMode === 'environment') ? 'user' : 'environment';
-            startCamera();
-        });
-
-        let stopLiveCaptureFn = null;
-
-        el.btnRecToggle.addEventListener('click', function () {
-            if (state.isRecording) {
-                if (stopLiveCaptureFn) stopLiveCaptureFn();
-                return;
-            }
-            if (!state.stream || el.liveVideo.videoWidth === 0) {
-                notify('Bitte zuerst die Kamera aktivieren.', 'info');
-                return;
-            }
-
-            const countdownSec = parseInt(el.selCountdown.value, 10);
-            if (countdownSec > 0) {
-                let remaining = countdownSec;
-                el.countdownVal.textContent = String(remaining);
-                el.countdownBox.classList.remove('hidden');
-                const timer = setInterval(function () {
-                    remaining--;
-                    if (remaining > 0) {
-                        el.countdownVal.textContent = String(remaining);
-                    } else {
-                        clearInterval(timer);
-                        el.countdownBox.classList.add('hidden');
-                        beginDirectFrameCapture();
-                    }
-                }, 1000);
-            } else {
-                beginDirectFrameCapture();
-            }
-        });
-
-        function beginDirectFrameCapture() {
-            const video = el.liveVideo;
-            const maxDim = 960;
-            let w = video.videoWidth || 800;
-            let h = video.videoHeight || 450;
-            if (w > maxDim || h > maxDim) {
-                const scale = maxDim / Math.max(w, h);
-                w = Math.round(w * scale);
-                h = Math.round(h * scale);
-            }
-
-            const capCanvas = document.createElement('canvas');
-            capCanvas.width = w;
-            capCanvas.height = h;
-            const capCtx = capCanvas.getContext('2d', { willReadFrequently: true });
-
-            const thumbCanvas = document.createElement('canvas');
-            thumbCanvas.width = 112;
-            thumbCanvas.height = Math.max(60, Math.round(112 * (h / w)));
-            const thumbCtx = thumbCanvas.getContext('2d');
-
-            const durationSec = parseFloat(el.selDuration.value);
-            const captured = [];
-            let rejectedBlack = 0;
-            let firstValidPerf = null;
-            let lastVideoTime = -1;
-            const recStartPerf = performance.now();
-
-            state.isRecording = true;
-            el.recHud.classList.remove('hidden');
-            el.btnRecToggle.textContent = 'Stopp';
-
-            function finishCapture() {
-                if (!state.isRecording) return;
-                state.isRecording = false;
-                if (state.rafId) cancelAnimationFrame(state.rafId);
-                el.recHud.classList.add('hidden');
-                el.btnRecToggle.textContent = 'Aufnahme starten';
-
-                if (captured.length < 2) {
-                    notify('Zu wenige gültige Einzelbilder erfasst. Bitte länger aufnehmen.', 'error');
-                    return;
-                }
-                finalizeExtractedFrames(captured, w, h, rejectedBlack);
-            }
-
-            stopLiveCaptureFn = finishCapture;
-
-            function sampleLoop(now) {
-                if (!state.isRecording) return;
-                const elapsedSec = (now - recStartPerf) / 1000;
-                el.recStats.textContent = elapsedSec.toFixed(1).replace('.', ',') + ' s | ' + captured.length + ' Bilder';
-
-                if (elapsedSec >= durationSec || captured.length >= 600) {
-                    finishCapture();
-                    return;
-                }
-
-                // Nur neue Sensor-Frames auslesen (verhindert Duplikate)
-                if (video.readyState >= 2 && video.currentTime !== lastVideoTime) {
-                    lastVideoTime = video.currentTime;
-                    capCtx.drawImage(video, 0, 0, w, h);
-                    const imgData = capCtx.getImageData(0, 0, w, h);
-
-                    if (isFrameBlack(imgData)) {
-                        rejectedBlack++;
-                    } else {
-                        if (firstValidPerf === null) firstValidPerf = now;
-                        const t = (now - firstValidPerf) / 1000;
-                        thumbCtx.drawImage(capCanvas, 0, 0, thumbCanvas.width, thumbCanvas.height);
-                        captured.push({
-                            time: t,
-                            imageData: imgData,
-                            width: w,
-                            height: h,
-                            enabled: true,
-                            thumbUrl: thumbCanvas.toDataURL('image/jpeg', 0.72)
-                        });
-                    }
-                }
-                state.rafId = requestAnimationFrame(sampleLoop);
-            }
-
-            state.rafId = requestAnimationFrame(sampleLoop);
-        }
-
-        // =====================================================================
-        // 4. VIDEO-DATEI HOCHLADEN (INKL. SLOW-MOTION & SCHWARZBILD-FILTER)
-        // =====================================================================
-        el.fileVideoInput.addEventListener('change', function (e) {
-            if (e.target.files && e.target.files[0]) {
-                processUploadedVideo(e.target.files[0]);
-            }
-        });
-
-        el.dropArea.addEventListener('dragover', function (e) {
-            e.preventDefault();
-            el.dropArea.classList.add('border-sky-400');
-        });
-        el.dropArea.addEventListener('dragleave', function () {
-            el.dropArea.classList.remove('border-sky-400');
-        });
-        el.dropArea.addEventListener('drop', function (e) {
-            e.preventDefault();
-            el.dropArea.classList.remove('border-sky-400');
-            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-                processUploadedVideo(e.dataTransfer.files[0]);
-            }
-        });
-
-        async function processUploadedVideo(file) {
-            el.uploadFilename.textContent = 'Datei: ' + file.name;
-            el.uploadFilename.classList.remove('hidden');
-
-            setTab('result');
-            el.emptyResultBox.classList.add('hidden');
-            el.busyOverlay.classList.remove('hidden');
-            el.busyLabel.textContent = 'Lade Videodaten...';
-            el.busyBar.style.width = '10%';
-
-            try {
-                const url = URL.createObjectURL(file);
-                const video = el.hiddenVideo;
-                video.playsInline = true;
-                video.muted = true;
-                video.preload = 'auto';
-                video.src = url;
-
-                await new Promise(function (resolve, reject) {
-                    video.onloadedmetadata = function () { resolve(); };
-                    video.onerror = function () { reject(new Error('Videodatei konnte nicht gelesen werden.')); };
-                });
-
-                const duration = video.duration;
-                if (!isFinite(duration) || duration <= 0.05) {
-                    throw new Error('Ungültige Videodauer.');
-                }
-
+            function beginDirectFrameCapture() {
+                const video = el.liveVideo;
                 const maxDim = 960;
                 let w = video.videoWidth || 800;
                 let h = video.videoHeight || 450;
@@ -802,356 +771,593 @@
                     h = Math.round(h * scale);
                 }
 
-                const offCanvas = document.createElement('canvas');
-                offCanvas.width = w;
-                offCanvas.height = h;
-                const offCtx = offCanvas.getContext('2d', { willReadFrequently: true });
+                const capCanvas = document.createElement('canvas');
+                capCanvas.width = w;
+                capCanvas.height = h;
+                const capCtx = capCanvas.getContext('2d', {willReadFrequently: true});
 
                 const thumbCanvas = document.createElement('canvas');
                 thumbCanvas.width = 112;
                 thumbCanvas.height = Math.max(60, Math.round(112 * (h / w)));
                 const thumbCtx = thumbCanvas.getContext('2d');
 
-                // Bis zu 120 Einzelbilder extrahieren (ab 5 ms Schrittweite)
-                const minStep = Math.max(0.005, state.intervalMs / 1000);
-                const step = Math.max(minStep, duration / 120);
-                const totalSteps = Math.floor(duration / step) + 1;
-
-                const extracted = [];
+                const durationSec = parseFloat(el.selDuration.value);
+                const captured = [];
                 let rejectedBlack = 0;
-                let firstValidTime = null;
+                let firstValidPerf = null;
+                let lastVideoTime = -1;
+                const recStartPerf = performance.now();
 
-                for (let i = 0; i < totalSteps; i++) {
-                    const seekTime = Math.min(i * step, duration - 0.005);
-                    if (seekTime < 0) break;
+                state.isRecording = true;
+                el.recHud.classList.remove('hidden');
+                el.btnRecToggle.textContent = 'Stopp';
 
-                    video.currentTime = seekTime;
-                    await new Promise(function (resolve) {
-                        const onSeeked = function () {
-                            video.removeEventListener('seeked', onSeeked);
-                            resolve();
-                        };
-                        video.addEventListener('seeked', onSeeked);
-                    });
+                function finishCapture() {
+                    if (!state.isRecording) return;
+                    state.isRecording = false;
+                    if (state.rafId) cancelAnimationFrame(state.rafId);
+                    el.recHud.classList.add('hidden');
+                    el.btnRecToggle.textContent = 'Aufnahme starten';
 
-                    offCtx.drawImage(video, 0, 0, w, h);
-                    const imgData = offCtx.getImageData(0, 0, w, h);
+                    if (captured.length < 2) {
+                        notify('Zu wenige gültige Einzelbilder erfasst. Bitte länger aufnehmen.', 'error');
+                        return;
+                    }
+                    finalizeExtractedFrames(captured, w, h, rejectedBlack);
+                }
 
-                    if (isFrameBlack(imgData)) {
-                        rejectedBlack++;
-                        continue;
+                stopLiveCaptureFn = finishCapture;
+
+                function sampleLoop(now) {
+                    if (!state.isRecording) return;
+                    const elapsedSec = (now - recStartPerf) / 1000;
+                    el.recStats.textContent = elapsedSec.toFixed(1).replace('.', ',') + ' s | ' + captured.length + ' Bilder';
+
+                    if (elapsedSec >= durationSec || captured.length >= 600) {
+                        finishCapture();
+                        return;
                     }
 
-                    if (firstValidTime === null) firstValidTime = seekTime;
-                    const normTime = seekTime - firstValidTime;
+                    // Nur neue Sensor-Frames auslesen (verhindert Duplikate)
+                    if (video.readyState >= 2 && video.currentTime !== lastVideoTime) {
+                        lastVideoTime = video.currentTime;
+                        capCtx.drawImage(video, 0, 0, w, h);
+                        const imgData = capCtx.getImageData(0, 0, w, h);
 
-                    thumbCtx.drawImage(offCanvas, 0, 0, thumbCanvas.width, thumbCanvas.height);
-                    extracted.push({
-                        time: normTime,
-                        imageData: imgData,
-                        width: w,
-                        height: h,
-                        enabled: true,
-                        thumbUrl: thumbCanvas.toDataURL('image/jpeg', 0.72)
-                    });
-
-                    const pct = Math.min(85, Math.round(((i + 1) / totalSteps) * 85));
-                    el.busyBar.style.width = pct + '%';
-                    el.busyLabel.textContent = 'Extrahiere Einzelbild ' + extracted.length + ' (' + normTime.toFixed(3).replace('.', ',') + ' s)...';
-                }
-
-                URL.revokeObjectURL(url);
-
-                if (extracted.length < 2) {
-                    throw new Error('Es wurden zu wenige gültige (nicht-schwarze) Bilder im Video gefunden.');
-                }
-
-                await finalizeExtractedFrames(extracted, w, h, rejectedBlack);
-            } catch (err) {
-                console.error(err);
-                el.busyOverlay.classList.add('hidden');
-                notify(err.message || 'Fehler beim Verarbeiten des Videos.', 'error');
-            }
-        }
-
-        async function finalizeExtractedFrames(frames, w, h, rejectedBlack) {
-            setTab('result');
-            el.emptyResultBox.classList.add('hidden');
-            el.busyOverlay.classList.remove('hidden');
-            el.busyLabel.textContent = 'Berechne statischen Hintergrund (Median-Filter)...';
-            el.busyBar.style.width = '92%';
-
-            await new Promise(function (r) { setTimeout(r, 25); });
-
-            state.width = w;
-            state.height = h;
-            state.frames = frames;
-            state.trimStartIdx = 0;
-            state.trimEndIdx = frames.length - 1;
-            state.background = computeMedianBackground(frames, w, h);
-
-            setupTrimControls();
-            applyTrimAndIntervalSelection();
-            renderStroboscope();
-
-            el.busyBar.style.width = '100%';
-            el.busyOverlay.classList.add('hidden');
-            el.dotReady.classList.remove('hidden');
-            el.btnExport.disabled = false;
-            
-
-            const dur = frames[frames.length - 1].time;
-            el.statusPill.textContent = frames.length + ' Rohbilder (' + dur.toFixed(2).replace('.', ',') + ' s)';
-
-            const blackInfo = rejectedBlack > 0 ? ' (' + rejectedBlack + ' schwarze Startbilder automatisch übersprungen)' : '';
-            notify('Stroboskop erfolgreich erstellt!' + blackInfo, 'success');
-        }
-
-        // =====================================================================
-        // 5. VIDEO-TRIMMEN (ANFANG & ENDE KÜRZEN MIT ZEITSTRAHL-VORSCHAU)
-        // =====================================================================
-        function setupTrimControls() {
-            const total = state.frames.length;
-            if (total < 2) {
-                el.trimContainer.classList.add('hidden');
-                return;
-            }
-            el.trimContainer.classList.remove('hidden');
-
-            const maxIdx = total - 1;
-            el.rngTrimStart.min = '0';
-            el.rngTrimStart.max = String(maxIdx);
-            el.rngTrimStart.value = String(state.trimStartIdx);
-
-            el.rngTrimEnd.min = '0';
-            el.rngTrimEnd.max = String(maxIdx);
-            el.rngTrimEnd.value = String(state.trimEndIdx);
-
-            // Visuellen Zeitstrahl aus bis zu 16 gleichmäßig verteilten Vorschaubildern aufbauen
-            el.timelineFilmstrip.innerHTML = '';
-            const previewSlots = Math.min(total, 16);
-            for (let i = 0; i < previewSlots; i++) {
-                const frameIdx = Math.floor((i * (total - 1)) / Math.max(1, previewSlots - 1));
-                const img = document.createElement('img');
-                img.src = state.frames[frameIdx].thumbUrl;
-                img.alt = '';
-                img.className = 'h-full flex-1 object-cover border-r border-slate-800/70 last:border-r-0 pointer-events-none';
-                el.timelineFilmstrip.appendChild(img);
-            }
-
-            updateTrimVisuals();
-        }
-
-        function updateTrimVisuals() {
-            const total = state.frames.length;
-            if (total < 2) return;
-            const maxIdx = total - 1;
-            const startPct = (state.trimStartIdx / maxIdx) * 100;
-            const endPct = (state.trimEndIdx / maxIdx) * 100;
-            const rightCutPct = 100 - endPct;
-
-            el.timelineMaskLeft.style.width = startPct + '%';
-            el.timelineMaskRight.style.width = rightCutPct + '%';
-            el.timelineActiveWindow.style.left = startPct + '%';
-            el.timelineActiveWindow.style.right = rightCutPct + '%';
-            el.dualRangeFill.style.left = startPct + '%';
-            el.dualRangeFill.style.right = rightCutPct + '%';
-
-            const startFrame = state.frames[state.trimStartIdx];
-            const endFrame = state.frames[state.trimEndIdx];
-            const trimmedDur = Math.max(0, endFrame.time - startFrame.time);
-            const activeCount = state.frames.filter(function (f) { return f.enabled; }).length;
-
-            el.lblTrimStart.textContent = startFrame.time.toFixed(3).replace('.', ',') + ' s (Bild ' + (state.trimStartIdx + 1) + ')';
-            el.lblTrimEnd.textContent = endFrame.time.toFixed(3).replace('.', ',') + ' s (Bild ' + (state.trimEndIdx + 1) + ')';
-            el.lblTrimSummary.textContent = trimmedDur.toFixed(2).replace('.', ',') + ' s | ' + activeCount + ' Bilder';
-        }
-
-        function applyTrimAndIntervalSelection() {
-            if (state.frames.length === 0) return;
-            const stepSec = state.intervalMs / 1000;
-            let lastT = -Infinity;
-
-            state.frames.forEach(function (f, idx) {
-                if (idx < state.trimStartIdx || idx > state.trimEndIdx) {
-                    f.enabled = false;
-                    return;
-                }
-                if (state.mode1to1) {
-                    f.enabled = true;
-                } else {
-                    if (f.time - lastT >= stepSec - 0.001) {
-                        f.enabled = true;
-                        lastT = f.time;
-                    } else {
-                        f.enabled = false;
+                        if (isFrameBlack(imgData)) {
+                            rejectedBlack++;
+                        } else {
+                            if (firstValidPerf === null) firstValidPerf = now;
+                            const t = (now - firstValidPerf) / 1000;
+                            thumbCtx.drawImage(capCanvas, 0, 0, thumbCanvas.width, thumbCanvas.height);
+                            captured.push({
+                                time: t,
+                                imageData: imgData,
+                                width: w,
+                                height: h,
+                                enabled: true,
+                                thumbUrl: thumbCanvas.toDataURL('image/jpeg', 0.72)
+                            });
+                        }
                     }
+                    state.rafId = requestAnimationFrame(sampleLoop);
+                }
+
+                state.rafId = requestAnimationFrame(sampleLoop);
+            }
+
+            // =====================================================================
+            // 4. VIDEO-DATEI HOCHLADEN (INKL. SLOW-MOTION & SCHWARZBILD-FILTER)
+            // =====================================================================
+            el.fileVideoInput.addEventListener('change', function (e) {
+                if (e.target.files && e.target.files[0]) {
+                    processUploadedVideo(e.target.files[0]);
                 }
             });
 
-            updateTrimVisuals();
-        }
-
-        function recalculateBackgroundFromTrim() {
-            if (state.frames.length < 2) return;
-            const trimmedSlice = state.frames.slice(state.trimStartIdx, state.trimEndIdx + 1);
-            if (trimmedSlice.length >= 2) {
-                const newBg = computeMedianBackground(trimmedSlice, state.width, state.height);
-                if (newBg) {
-                    state.background = newBg;
-                }
-            }
-        }
-
-        let bgDebounceTimer = null;
-        function handleTrimSliderChange(changedEdge) {
-            let sVal = parseInt(el.rngTrimStart.value, 10);
-            let eVal = parseInt(el.rngTrimEnd.value, 10);
-
-            // Mindestens 2 Frames Abstand zwischen Start und Ende sicherstellen
-            if (changedEdge === 'start' && sVal >= eVal) {
-                sVal = Math.max(0, eVal - 1);
-                el.rngTrimStart.value = String(sVal);
-            } else if (changedEdge === 'end' && eVal <= sVal) {
-                eVal = Math.min(state.frames.length - 1, sVal + 1);
-                el.rngTrimEnd.value = String(eVal);
-            }
-
-            state.trimStartIdx = sVal;
-            state.trimEndIdx = eVal;
-
-            // Z-Index anpassen, damit sich überlappende Regler am Rand immer greifen lassen
-            el.rngTrimStart.style.zIndex = (sVal > state.frames.length - 3) ? '30' : '20';
-            el.rngTrimEnd.style.zIndex = '25';
-
-            applyTrimAndIntervalSelection();
-            renderStroboscope();
-
-            // Hintergrund automatisch aus dem gekürzten Bereich nachziehen (sanft entprellt)
-            clearTimeout(bgDebounceTimer);
-            bgDebounceTimer = setTimeout(function () {
-                recalculateBackgroundFromTrim();
-                renderStroboscope();
-            }, 140);
-        }
-
-        el.rngTrimStart.addEventListener('input', function () { handleTrimSliderChange('start'); });
-        el.rngTrimEnd.addEventListener('input', function () { handleTrimSliderChange('end'); });
-
-       
-        el.btnTrimReset.addEventListener('click', function () {
-            if (state.frames.length < 2) return;
-            state.trimStartIdx = 0;
-            state.trimEndIdx = state.frames.length - 1;
-            el.rngTrimStart.value = '0';
-            el.rngTrimEnd.value = String(state.trimEndIdx);
-            applyTrimAndIntervalSelection();
-            recalculateBackgroundFromTrim();
-            renderStroboscope();
-            notify('Video-Bereich auf volle Länge zurückgesetzt.', 'info');
-        });
-
-        // =====================================================================
-        // 6. STROBOSKOP-COMPOSITING ENGINE
-        // =====================================================================
-        function renderStroboscope() {
-            if (!state.background || state.frames.length === 0) return;
-
-            const w = state.width;
-            const h = state.height;
-            const canvas = el.resultCanvas;
-            canvas.width = w;
-            canvas.height = h;
-            const ctx = canvas.getContext('2d');
-
-            const outData = new Uint8ClampedArray(state.background.data);
-            const bgData = state.background.data;
-            const activeFrames = state.frames.filter(function (f) { return f.enabled; });
-
-            const thresh = state.sensitivity;
-            const feather = 18;
-
-            activeFrames.forEach(function (frame) {
-                const fData = frame.imageData.data;
-
-                for (let p = 0; p < fData.length; p += 4) {
-                    const dr = Math.abs(fData[p] - bgData[p]);
-                    const dg = Math.abs(fData[p + 1] - bgData[p + 1]);
-                    const db = Math.abs(fData[p + 2] - bgData[p + 2]);
-                    // Wahrnehmungsgewichtete Farbdifferenz
-                    const diff = (dr + dg + db) * 0.45;
-
-                    if (diff > thresh) {
-                        const alpha = Math.min(1, (diff - thresh) / feather);
-                        const invAlpha = 1 - alpha;
-
-                        outData[p] = fData[p] * alpha + outData[p] * invAlpha;
-                        outData[p + 1] = fData[p + 1] * alpha + outData[p + 1] * invAlpha;
-                        outData[p + 2] = fData[p + 2] * alpha + outData[p + 2] * invAlpha;
-                    }
+            el.dropArea.addEventListener('dragover', function (e) {
+                e.preventDefault();
+                el.dropArea.classList.add('border-blue-600');
+            });
+            el.dropArea.addEventListener('dragleave', function () {
+                el.dropArea.classList.remove('border-blue-600');
+            });
+            el.dropArea.addEventListener('drop', function (e) {
+                e.preventDefault();
+                el.dropArea.classList.remove('border-blue-600');
+                if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                    processUploadedVideo(e.dataTransfer.files[0]);
                 }
             });
 
-            ctx.putImageData(new ImageData(outData, w, h), 0, 0);
+            async function processUploadedVideo(file) {
+                el.uploadFilename.textContent = 'Datei: ' + file.name;
+                el.uploadFilename.classList.remove('hidden');
 
-            // Kennzahlen aktualisieren
-            let avgDt = state.intervalMs / 1000;
-            let totalDur = 0;
-            if (activeFrames.length >= 2) {
-                totalDur = activeFrames[activeFrames.length - 1].time - activeFrames[0].time;
-                avgDt = totalDur / (activeFrames.length - 1);
+                setTab('result');
+                el.emptyResultBox.classList.add('hidden');
+                el.busyOverlay.classList.remove('hidden');
+                el.busyLabel.textContent = 'Lade Videodaten...';
+                el.busyBar.style.width = '10%';
+
+                try {
+                    const url = URL.createObjectURL(file);
+                    const video = el.hiddenVideo;
+                    video.playsInline = true;
+                    video.muted = true;
+                    video.preload = 'auto';
+                    video.src = url;
+
+                    await new Promise(function (resolve, reject) {
+                        video.onloadedmetadata = function () {resolve();};
+                        video.onerror = function () {reject(new Error('Videodatei konnte nicht gelesen werden.'));};
+                    });
+
+                    const duration = video.duration;
+                    if (!isFinite(duration) || duration <= 0.05) {
+                        throw new Error('Ungültige Videodauer.');
+                    }
+
+                    const maxDim = 960;
+                    let w = video.videoWidth || 800;
+                    let h = video.videoHeight || 450;
+                    if (w > maxDim || h > maxDim) {
+                        const scale = maxDim / Math.max(w, h);
+                        w = Math.round(w * scale);
+                        h = Math.round(h * scale);
+                    }
+
+                    const offCanvas = document.createElement('canvas');
+                    offCanvas.width = w;
+                    offCanvas.height = h;
+                    const offCtx = offCanvas.getContext('2d', {willReadFrequently: true});
+
+                    const thumbCanvas = document.createElement('canvas');
+                    thumbCanvas.width = 112;
+                    thumbCanvas.height = Math.max(60, Math.round(112 * (h / w)));
+                    const thumbCtx = thumbCanvas.getContext('2d');
+
+                    // Bis zu 120 Einzelbilder extrahieren (ab 5 ms Schrittweite)
+                    const minStep = Math.max(0.005, state.intervalMs / 1000);
+                    const step = Math.max(minStep, duration / 120);
+                    const totalSteps = Math.floor(duration / step) + 1;
+
+                    const extracted = [];
+                    let rejectedBlack = 0;
+                    let firstValidTime = null;
+
+                    for (let i = 0; i < totalSteps; i++) {
+                        const seekTime = Math.min(i * step, duration - 0.005);
+                        if (seekTime < 0) break;
+
+                        video.currentTime = seekTime;
+                        await new Promise(function (resolve) {
+                            const onSeeked = function () {
+                                video.removeEventListener('seeked', onSeeked);
+                                resolve();
+                            };
+                            video.addEventListener('seeked', onSeeked);
+                        });
+
+                        offCtx.drawImage(video, 0, 0, w, h);
+                        const imgData = offCtx.getImageData(0, 0, w, h);
+
+                        if (isFrameBlack(imgData)) {
+                            rejectedBlack++;
+                            continue;
+                        }
+
+                        if (firstValidTime === null) firstValidTime = seekTime;
+                        const normTime = seekTime - firstValidTime;
+
+                        thumbCtx.drawImage(offCanvas, 0, 0, thumbCanvas.width, thumbCanvas.height);
+                        extracted.push({
+                            time: normTime,
+                            imageData: imgData,
+                            width: w,
+                            height: h,
+                            enabled: true,
+                            thumbUrl: thumbCanvas.toDataURL('image/jpeg', 0.72)
+                        });
+
+                        const pct = Math.min(85, Math.round(((i + 1) / totalSteps) * 85));
+                        el.busyBar.style.width = pct + '%';
+                        el.busyLabel.textContent = 'Extrahiere Einzelbild ' + extracted.length + ' (' + normTime.toFixed(3).replace('.', ',') + ' s)...';
+                    }
+
+                    URL.revokeObjectURL(url);
+
+                    if (extracted.length < 2) {
+                        throw new Error('Es wurden zu wenige gültige (nicht-schwarze) Bilder im Video gefunden.');
+                    }
+
+                    await finalizeExtractedFrames(extracted, w, h, rejectedBlack);
+                } catch (err) {
+                    console.error(err);
+                    el.busyOverlay.classList.add('hidden');
+                    notify(err.message || 'Fehler beim Verarbeiten des Videos.', 'error');
+                }
             }
 
-        }
+            async function finalizeExtractedFrames(frames, w, h, rejectedBlack) {
+                setTab('result');
+                el.emptyResultBox.classList.add('hidden');
+                el.busyOverlay.classList.remove('hidden');
+                el.busyLabel.textContent = 'Berechne statischen Hintergrund (Median-Filter)...';
+                el.busyBar.style.width = '92%';
 
-        // =====================================================================
-        // 7. SLIDER, BUTTONS & PNG-EXPORT
-        // =====================================================================
-        function updateIntervalDisplay() {
-            const ms = state.intervalMs;
-            //const sec = (ms / 1000).toFixed(3).replace('.', ',');
-            const hz = (1000 / ms).toFixed(ms < 20 ? 0 : 1).replace('.', ',');
-            el.lblInterval.textContent = ms + ' ms (' + hz + ' Hz)';
-        }
+                await new Promise(function (r) {setTimeout(r, 25);});
 
-        el.rngInterval.addEventListener('input', function (e) {
-            state.intervalMs = parseInt(e.target.value, 10);
-            state.mode1to1 = false;
-            updateIntervalDisplay();
-            if (state.frames.length > 0) {
+                state.width = w;
+                state.height = h;
+                state.frames = frames;
+                state.trimStartIdx = 0;
+                state.trimEndIdx = frames.length - 1;
+                state.background = computeMedianBackground(frames, w, h);
+
+                setupTrimControls();
                 applyTrimAndIntervalSelection();
                 renderStroboscope();
+
+                el.busyBar.style.width = '100%';
+                el.busyOverlay.classList.add('hidden');
+                el.dotReady.classList.remove('hidden');
+                el.btnExport.disabled = false;
+
+
+                const dur = frames[frames.length - 1].time;
+                el.statusPill.textContent = frames.length + ' Rohbilder (' + dur.toFixed(2).replace('.', ',') + ' s)';
+
+                const blackInfo = rejectedBlack > 0 ? ' (' + rejectedBlack + ' schwarze Startbilder automatisch übersprungen)' : '';
+                notify('Stroboskop erfolgreich erstellt!' + blackInfo, 'success');
             }
-        });
 
-       
+            // =====================================================================
+            // 5. VIDEO-TRIMMEN (ANFANG & ENDE KÜRZEN MIT ZEITSTRAHL-VORSCHAU)
+            // =====================================================================
+            function setupTrimControls() {
+                const total = state.frames.length;
+                if (total < 2) {
+                    el.trimContainer.classList.add('hidden');
+                    return;
+                }
+                el.trimContainer.classList.remove('hidden');
 
-        el.rngSensitivity.addEventListener('input', function (e) {
-            state.sensitivity = parseInt(e.target.value, 10);
-            el.lblSensitivity.textContent = String(state.sensitivity);
-            renderStroboscope();
-        });
+                const maxIdx = total - 1;
+                el.rngTrimStart.min = '0';
+                el.rngTrimStart.max = String(maxIdx);
+                el.rngTrimStart.value = String(state.trimStartIdx);
 
-        // PNG-Download
-        el.btnExport.addEventListener('click', function () {
-            if (!state.background) return;
-            try {
-                const link = document.createElement('a');
+                el.rngTrimEnd.min = '0';
+                el.rngTrimEnd.max = String(maxIdx);
+                el.rngTrimEnd.value = String(state.trimEndIdx);
+
+                // Visuellen Zeitstrahl aus bis zu 16 gleichmäßig verteilten Vorschaubildern aufbauen
+                el.timelineFilmstrip.innerHTML = '';
+                const previewSlots = Math.min(total, 16);
+                for (let i = 0; i < previewSlots; i++) {
+                    const frameIdx = Math.floor((i * (total - 1)) / Math.max(1, previewSlots - 1));
+                    const img = document.createElement('img');
+                    img.src = state.frames[frameIdx].thumbUrl;
+                    img.alt = '';
+                    img.className = 'h-full flex-1 object-cover border-r border-slate-300 last:border-r-0 pointer-events-none';
+                    el.timelineFilmstrip.appendChild(img);
+                }
+
+                updateTrimVisuals();
+            }
+
+            function updateTrimVisuals() {
+                const total = state.frames.length;
+                if (total < 2) return;
+                const maxIdx = total - 1;
+                const startPct = (state.trimStartIdx / maxIdx) * 100;
+                const endPct = (state.trimEndIdx / maxIdx) * 100;
+                const rightCutPct = 100 - endPct;
+
+                el.timelineMaskLeft.style.width = startPct + '%';
+                el.timelineMaskRight.style.width = rightCutPct + '%';
+                el.timelineActiveWindow.style.left = startPct + '%';
+                el.timelineActiveWindow.style.right = rightCutPct + '%';
+                el.dualRangeFill.style.left = startPct + '%';
+                el.dualRangeFill.style.right = rightCutPct + '%';
+
+                const startFrame = state.frames[state.trimStartIdx];
+                const endFrame = state.frames[state.trimEndIdx];
+                const trimmedDur = Math.max(0, endFrame.time - startFrame.time);
+                const activeCount = state.frames.filter(function (f) {return f.enabled;}).length;
+
+                el.lblTrimStart.textContent = startFrame.time.toFixed(3).replace('.', ',') + ' s (Bild ' + (state.trimStartIdx + 1) + ')';
+                el.lblTrimEnd.textContent = endFrame.time.toFixed(3).replace('.', ',') + ' s (Bild ' + (state.trimEndIdx + 1) + ')';
+                el.lblTrimSummary.textContent = trimmedDur.toFixed(2).replace('.', ',') + ' s | ' + activeCount + ' Bilder';
+            }
+
+            function applyTrimAndIntervalSelection() {
+                if (state.frames.length === 0) return;
+                const stepSec = state.intervalMs / 1000;
+                let lastT = -Infinity;
+
+                state.frames.forEach(function (f, idx) {
+                    if (idx < state.trimStartIdx || idx > state.trimEndIdx) {
+                        f.enabled = false;
+                        return;
+                    }
+                    if (state.mode1to1) {
+                        f.enabled = true;
+                    } else {
+                        if (f.time - lastT >= stepSec - 0.001) {
+                            f.enabled = true;
+                            lastT = f.time;
+                        } else {
+                            f.enabled = false;
+                        }
+                    }
+                });
+
+                updateTrimVisuals();
+            }
+
+            function recalculateBackgroundFromTrim() {
+                if (state.frames.length < 2) return;
+                const trimmedSlice = state.frames.slice(state.trimStartIdx, state.trimEndIdx + 1);
+                if (trimmedSlice.length >= 2) {
+                    const newBg = computeMedianBackground(trimmedSlice, state.width, state.height);
+                    if (newBg) {
+                        state.background = newBg;
+                    }
+                }
+            }
+
+            let bgDebounceTimer = null;
+            function handleTrimSliderChange(changedEdge) {
+                let sVal = parseInt(el.rngTrimStart.value, 10);
+                let eVal = parseInt(el.rngTrimEnd.value, 10);
+
+                // Mindestens 2 Frames Abstand zwischen Start und Ende sicherstellen
+                if (changedEdge === 'start' && sVal >= eVal) {
+                    sVal = Math.max(0, eVal - 1);
+                    el.rngTrimStart.value = String(sVal);
+                } else if (changedEdge === 'end' && eVal <= sVal) {
+                    eVal = Math.min(state.frames.length - 1, sVal + 1);
+                    el.rngTrimEnd.value = String(eVal);
+                }
+
+                state.trimStartIdx = sVal;
+                state.trimEndIdx = eVal;
+
+                // Z-Index anpassen, damit sich überlappende Regler am Rand immer greifen lassen
+                el.rngTrimStart.style.zIndex = (sVal > state.frames.length - 3) ? '30' : '20';
+                el.rngTrimEnd.style.zIndex = '25';
+
+                applyTrimAndIntervalSelection();
+                renderStroboscope();
+
+                // Hintergrund automatisch aus dem gekürzten Bereich nachziehen (sanft entprellt)
+                clearTimeout(bgDebounceTimer);
+                bgDebounceTimer = setTimeout(function () {
+                    recalculateBackgroundFromTrim();
+                    renderStroboscope();
+                }, 140);
+            }
+
+            el.rngTrimStart.addEventListener('input', function () {handleTrimSliderChange('start');});
+            el.rngTrimEnd.addEventListener('input', function () {handleTrimSliderChange('end');});
+
+
+            el.btnTrimReset.addEventListener('click', function () {
+                if (state.frames.length < 2) return;
+                state.trimStartIdx = 0;
+                state.trimEndIdx = state.frames.length - 1;
+                el.rngTrimStart.value = '0';
+                el.rngTrimEnd.value = String(state.trimEndIdx);
+                applyTrimAndIntervalSelection();
+                recalculateBackgroundFromTrim();
+                renderStroboscope();
+                notify('Video-Bereich auf volle Länge zurückgesetzt.', 'info');
+            });
+
+            // =====================================================================
+            // 6. STROBOSKOP-COMPOSITING ENGINE
+            // =====================================================================
+            function renderStroboscope() {
+                if (!state.background || state.frames.length === 0) return;
+
+                const w = state.width;
+                const h = state.height;
+                const canvas = el.resultCanvas;
+                canvas.width = w;
+                canvas.height = h;
+                const ctx = canvas.getContext('2d');
+
+                const outData = new Uint8ClampedArray(state.background.data);
+                const bgData = state.background.data;
+                const activeFrames = state.frames.filter(function (f) {return f.enabled;});
+
+                const thresh = state.sensitivity;
+                const feather = 18;
+
+                activeFrames.forEach(function (frame) {
+                    const fData = frame.imageData.data;
+
+                    for (let p = 0; p < fData.length; p += 4) {
+                        const dr = Math.abs(fData[p] - bgData[p]);
+                        const dg = Math.abs(fData[p + 1] - bgData[p + 1]);
+                        const db = Math.abs(fData[p + 2] - bgData[p + 2]);
+                        // Wahrnehmungsgewichtete Farbdifferenz
+                        const diff = (dr + dg + db) * 0.45;
+
+                        if (diff > thresh) {
+                            const alpha = Math.min(1, (diff - thresh) / feather);
+                            const invAlpha = 1 - alpha;
+
+                            outData[p] = fData[p] * alpha + outData[p] * invAlpha;
+                            outData[p + 1] = fData[p + 1] * alpha + outData[p + 1] * invAlpha;
+                            outData[p + 2] = fData[p + 2] * alpha + outData[p + 2] * invAlpha;
+                        }
+                    }
+                });
+
+                ctx.putImageData(new ImageData(outData, w, h), 0, 0);
+
+                // Kennzahlen aktualisieren
+                let avgDt = state.intervalMs / 1000;
+                let totalDur = 0;
+                if (activeFrames.length >= 2) {
+                    totalDur = activeFrames[activeFrames.length - 1].time - activeFrames[0].time;
+                    avgDt = totalDur / (activeFrames.length - 1);
+                }
+
+            }
+
+            // =====================================================================
+            // 7. SLIDER, BUTTONS & PNG-EXPORT
+            // =====================================================================
+            function updateIntervalDisplay() {
+                const ms = state.intervalMs;
+                //const sec = (ms / 1000).toFixed(3).replace('.', ',');
+                const hz = (1000 / ms).toFixed(ms < 20 ? 0 : 1).replace('.', ',');
+                el.lblInterval.textContent = ms + ' ms (' + hz + ' Hz)';
+            }
+
+            el.rngInterval.addEventListener('input', function (e) {
+                state.intervalMs = parseInt(e.target.value, 10);
+                state.mode1to1 = false;
+                updateIntervalDisplay();
+                if (state.frames.length > 0) {
+                    applyTrimAndIntervalSelection();
+                    renderStroboscope();
+                }
+            });
+
+
+
+            el.rngSensitivity.addEventListener('input', function (e) {
+                state.sensitivity = parseInt(e.target.value, 10);
+                el.lblSensitivity.textContent = String(state.sensitivity);
+                renderStroboscope();
+            });
+
+            // PNG-Download
+            el.btnExport.addEventListener('click', function () {
+                if (!state.background) return;
+
                 const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
-                link.download = 'StrobeMotion-' + stamp + '.png';
-                link.href = el.resultCanvas.toDataURL('image/png');
-                document.body.appendChild(link);
-                link.click();
-                link.remove();
-                notify('Stroboskop-Bild als PNG heruntergeladen.', 'success');
-            } catch (err) {
-                console.error(err);
-                notify('Export fehlgeschlagen.', 'error');
-            }
-        });
+                const filename = 'StrobeMotion-' + stamp + '.png';
 
-        updateIntervalDisplay();
-    });
+                // 1. Canvas speicherschonend in ein echtes Datei-Objekt (Blob) umwandeln
+                el.resultCanvas.toBlob(async function (blob) {
+                    if (!blob) {
+                        notify('Bild konnte nicht erstellt werden.', 'error');
+                        return;
+                    }
+
+                    // 2. Prüfen, ob iOS / Mobile "Teilen"-Menü mit Dateien unterstützt wird
+                    const file = new File([blob], filename, {type: 'image/png'});
+                    const isTouchDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+                    if (isTouchDevice && navigator.canShare && navigator.canShare({files: [file]})) {
+                        try {
+                            await navigator.share({
+                                files: [file],
+                                title: 'StrobeMotion Aufnahme'
+                            });
+                            notify('Bild bereit zum Sichern oder Teilen.', 'success');
+                            return;
+                        } catch (err) {
+                            // Wenn der Nutzer das Teilen-Menü einfach schließt (AbortError), nichts tun
+                            if (err.name === 'AbortError') return;
+                            // Bei anderen Fehlern weiter zum normalen Download-Fallback
+                        }
+                    }
+
+                    // 3. Fallback für Desktop-Browser (oder ältere iOS-Versionen)
+                    try {
+                        const blobUrl = URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.download = filename;
+                        link.href = blobUrl;
+                        document.body.appendChild(link);
+                        link.click();
+                        link.remove();
+
+                        // Speicher nach kurzer Verzögerung wieder freigeben
+                        setTimeout(function () {
+                            URL.revokeObjectURL(blobUrl);
+                        }, 5000);
+
+                        notify('Stroboskop-Bild als PNG heruntergeladen.', 'success');
+                    } catch (err) {
+                        console.error(err);
+                        notify('Export fehlgeschlagen.', 'error');
+                    }
+                }, 'image/png');
+            });
+
+            updateIntervalDisplay();
+        });
     </script>
 </body>
+<!-- Schlichter Footer mit JKU-Logo & Impressum -->
+<footer class="bg-white border-t border-slate-300 mt-auto">
+    <div
+        class="max-w-7xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+
+        <!-- JKU Logo & Projektbezug -->
+        <div class="flex items-center gap-4">
+            <!-- Minimalistisches JKU Vektor-Logo -->
+            <div class="bg-slate-00 text-white px-3 py-2 flex items-center gap-2 select-none">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 582 103" width="291" height="103">
+                    <path fill="#9c487b" fill-rule="evenodd"
+                        d="M468.12,62.38L467.88,62.88L467.88,67.50L468.25,67.88L475.62,67.88L476.38,68.75L476.38,89.75L476.88,90.00L482.00,90.00L482.50,89.75L482.50,68.75L483.25,67.88L490.62,67.88L491.00,67.50L491.00,62.88L490.75,62.38Z M328.00,62.38L327.62,63.00L327.62,89.50L328.25,90.00L348.50,90.00L348.88,89.62L348.88,85.25L348.50,84.88L334.25,84.88L333.62,84.12L333.50,80.00L333.62,79.38L334.25,78.88L346.75,78.75L346.88,73.88L346.50,73.25L334.25,73.25L333.62,72.62L333.50,68.75L334.25,67.88L348.38,67.75L348.75,67.00L348.50,62.62L347.88,62.25Z M310.25,62.38L290.00,62.25L289.38,62.62L289.38,89.75L289.88,90.00L295.00,90.00L295.50,89.75L295.62,80.12L296.12,79.38L296.75,79.12L308.12,79.38L308.75,79.00L308.88,74.25L308.50,73.88L296.25,73.88L295.62,73.12L295.50,68.75L296.25,67.88L310.38,67.75L310.75,67.00L310.62,62.88Z M564.75,62.38L559.88,62.12L559.12,62.50L559.00,77.88L558.62,78.38L557.88,78.00L556.88,76.25L556.12,75.62L554.50,73.12L552.12,70.38L551.62,69.38L546.62,62.88L545.62,62.25L541.00,62.25L540.38,62.62L540.38,89.75L540.88,90.00L545.62,90.00L546.25,89.50L546.12,73.62L546.50,73.25L547.88,74.25L559.62,89.88L564.62,90.00L565.00,89.62L565.00,62.88Z M384.38,62.25L384.00,62.88L384.00,79.75L384.25,80.25L384.25,81.75L384.88,83.00L385.00,84.25L386.25,86.50L388.50,88.62L390.25,89.62L394.00,90.62L398.62,90.62L399.62,90.12L401.75,89.88L403.75,88.75L406.62,85.88L407.88,83.12L408.25,79.00L408.62,77.88L408.50,62.62L407.88,62.25L403.00,62.25L402.38,62.62L402.25,79.38L402.00,81.00L400.88,83.00L400.00,83.88L398.00,84.88L395.75,85.00L394.25,84.75L392.50,83.88L391.12,82.25L390.75,80.62L390.25,79.75L390.12,62.62L389.62,62.25Z M354.38,62.25L354.00,62.88L354.00,89.62L354.38,90.00L368.88,89.88L371.75,88.88L373.88,87.75L376.62,85.25L378.50,82.38L379.88,77.50L379.62,73.25L378.75,70.50L376.88,67.38L375.38,65.88L373.00,64.12L370.50,63.00L366.75,62.25Z M360.38,68.00L366.50,67.88L367.62,68.12L369.50,69.00L370.62,69.88L372.62,72.50L373.25,75.12L373.25,77.62L372.88,79.38L371.88,81.38L369.12,83.75L367.50,84.12L366.62,84.62L360.75,84.62L360.12,84.12L360.00,68.38Z M494.38,62.00L494.00,62.38L494.00,90.50L494.38,90.88L500.50,90.88L500.88,90.50L500.88,62.38L500.50,62.00Z M452.38,62.12L451.12,64.62L450.88,65.75L450.00,67.12L449.88,68.00L449.12,69.25L448.75,70.75L448.12,71.62L446.88,75.12L446.12,76.25L444.88,79.75L444.12,80.88L443.88,82.25L443.00,83.62L442.88,84.62L442.00,86.00L440.75,89.62L441.25,90.00L446.75,89.88L447.75,87.88L448.00,86.62L448.75,85.62L449.00,84.38L449.62,83.88L460.62,83.88L461.88,85.88L462.00,86.75L462.75,87.88L463.00,89.25L463.50,89.88L469.62,89.88L469.75,89.12L469.00,88.12L468.88,87.12L468.00,85.75L467.75,84.62L466.00,81.00L465.88,80.12L465.12,79.00L463.75,75.12L462.12,72.00L461.75,70.50L461.00,69.25L460.75,68.00L460.00,66.88L459.88,66.00L459.00,64.62L458.62,63.12L457.62,62.00Z M455.12,70.50L455.62,70.50L455.88,70.88L456.12,72.38L456.88,73.62L457.12,74.88L457.88,76.00L458.38,77.75L458.25,78.25L457.75,78.62L452.38,78.62L451.88,78.12L452.00,76.75L452.75,75.62L454.12,71.75Z M517.12,62.00L515.50,62.75L514.12,63.00L512.00,64.25L508.12,68.12L507.00,70.12L506.75,71.50L506.00,73.12L505.88,78.00L506.12,80.00L507.12,82.75L507.88,83.62L508.25,84.62L511.38,87.88L513.25,89.00L514.00,89.12L515.12,89.88L516.50,90.00L518.12,90.62L522.88,90.62L526.00,89.88L528.75,88.62L531.12,86.75L533.88,83.25L534.88,81.00L535.62,77.25L535.62,75.25L534.88,71.38L533.75,68.88L532.00,66.50L530.50,65.00L527.62,63.12L524.12,62.00Z M517.88,67.88L521.88,67.62L524.12,68.12L526.88,70.25L527.75,71.38L528.12,72.62L528.88,73.75L529.00,78.00L527.75,81.25L525.25,83.75L522.75,84.88L518.62,84.88L516.38,83.88L514.00,81.62L513.00,80.00L512.88,79.00L512.25,77.75L512.25,74.88L513.25,71.88L514.12,70.50L515.50,69.12Z M423.88,62.00L422.38,62.75L421.12,63.00L418.75,64.38L416.25,66.62L415.12,68.12L414.00,70.12L413.00,73.38L412.88,77.62L413.12,79.75L414.12,82.62L415.25,84.62L417.38,87.00L419.38,88.62L421.62,89.75L425.00,90.62L429.88,90.62L431.12,90.12L432.88,89.88L436.50,87.88L438.00,86.38L438.38,85.62L435.62,82.25L434.38,82.00L432.25,83.75L431.00,84.12L430.12,84.75L428.50,85.00L425.00,84.75L422.50,83.25L421.00,81.75L420.25,80.50L419.25,77.25L419.25,75.12L420.00,72.50L421.12,70.62L422.50,69.12L424.38,68.00L426.12,67.62L430.25,67.88L431.25,68.25L434.25,70.50L434.62,70.50L437.88,67.00L438.12,65.88L437.62,65.12L434.62,63.12L431.75,62.12L429.88,61.88Z M266.12,62.00L264.50,62.75L263.12,63.00L261.00,64.25L258.88,66.00L257.12,68.12L256.00,70.12L255.00,73.00L254.88,78.25L255.12,80.00L256.25,83.00L257.88,85.38L260.38,87.88L263.75,89.75L267.25,90.62L271.88,90.62L275.00,89.88L277.75,88.62L280.25,86.62L282.62,83.62L283.75,81.25L284.62,76.75L284.62,75.25L284.25,74.62L283.75,71.00L282.75,69.00L280.88,66.38L278.50,64.25L277.25,63.75L276.75,63.25L273.12,62.00Z M266.88,67.88L270.88,67.62L273.12,68.12L275.88,70.25L276.88,71.62L277.12,72.62L277.88,73.75L277.88,78.75L276.75,81.12L275.88,82.38L274.25,83.75L271.75,84.88L267.62,84.88L265.38,83.88L263.00,81.62L262.00,80.00L261.25,77.88L261.25,74.62L262.25,71.88L263.12,70.50L264.50,69.12Z M79.62,21.25L79.75,40.75L85.38,45.88L89.38,49.00L110.38,67.00L114.25,70.62L115.75,71.62L116.88,73.00L116.88,73.38L116.25,73.75L80.25,73.62L79.62,74.25L79.62,89.50L80.00,89.88L155.62,90.00L156.00,89.62L156.00,74.25L155.50,73.62L119.25,73.62L118.88,73.12L119.00,72.50L123.50,68.88L126.50,66.00L130.50,62.88L133.50,60.00L137.50,56.88L140.50,54.00L141.25,53.62L155.75,41.12L156.00,40.62L155.88,21.00L155.25,21.00L153.38,22.88L149.38,26.00L146.38,28.88L142.38,32.00L139.38,34.88L135.38,38.00L132.38,40.88L128.38,44.00L125.38,46.88L124.62,47.25L118.25,52.88L117.62,52.88L116.25,51.88L92.50,31.25L90.50,29.88L87.50,27.00L83.50,23.88L80.75,21.12L79.88,21.00Z M512.62,20.38L512.25,20.88L512.38,47.88L513.00,48.25L532.25,48.12L532.62,47.62L532.62,43.38L532.00,42.88L519.25,42.88L518.75,42.38L518.62,20.88L517.88,20.25Z M323.00,20.38L322.62,21.00L322.50,25.00L322.88,25.75L336.62,25.88L337.00,26.50L334.25,29.38L322.25,43.50L322.38,47.88L323.00,48.25L344.88,48.12L345.25,47.62L345.38,43.88L345.00,43.12L331.25,43.00L330.75,42.62L330.75,42.12L344.75,26.12L345.25,24.88L345.12,20.62L344.62,20.25Z M169.12,20.38L168.88,20.88L168.88,62.25L169.12,65.00L170.12,69.75L170.88,71.38L171.12,72.88L174.00,78.50L177.25,82.62L181.12,85.75L186.75,88.75L188.50,89.12L190.12,89.88L191.75,90.00L195.00,90.88L208.88,90.88L212.12,90.00L213.75,89.88L219.50,87.62L222.75,85.75L225.38,83.75L227.75,81.38L230.62,77.50L232.00,74.25L232.88,72.88L233.12,71.50L233.88,70.00L234.00,68.62L234.88,65.75L235.25,59.25L235.62,58.62L235.50,20.62L234.88,20.25L219.25,20.25L218.75,20.62L218.62,59.88L217.62,65.00L217.12,65.75L216.62,67.50L214.88,70.25L213.38,71.88L210.75,73.75L208.25,74.88L206.12,75.12L204.75,75.62L199.62,75.62L198.12,75.12L196.00,74.88L194.88,74.12L193.50,73.75L191.50,72.25L189.62,70.38L188.25,68.50L187.00,66.00L186.88,64.88L186.12,63.25L185.62,58.88L185.50,20.62L184.88,20.25Z M66.75,20.38L50.12,20.38L49.88,20.88L49.88,64.12L48.88,69.25L47.00,72.38L45.38,73.88L43.75,74.75L41.62,75.25L37.25,75.25L35.25,74.88L32.50,73.75L28.50,70.88L25.75,68.00L25.12,68.00L15.00,79.25L15.12,80.12L18.62,83.62L21.50,85.88L23.75,87.00L24.38,87.62L26.00,88.12L27.12,88.88L28.12,89.00L29.50,89.75L32.12,90.12L33.75,90.75L45.50,90.88L48.38,90.00L50.75,89.62L51.75,89.00L52.75,88.88L53.75,88.12L54.75,87.88L55.62,87.12L56.50,86.88L59.12,84.75L62.62,80.75L64.75,76.88L65.25,74.88L65.75,74.12L66.88,68.88L67.00,20.88Z M439.50,20.25L434.12,20.38L433.88,20.88L433.88,30.75L433.12,31.62L422.88,31.50L422.25,30.75L422.12,20.62L421.62,20.25L417.00,20.25L416.38,20.62L416.25,47.62L416.62,48.12L421.62,48.25L422.12,47.88L422.25,37.75L423.12,37.00L433.50,37.12L433.88,37.75L434.00,47.88L434.38,48.25L438.88,48.38L439.75,48.00L439.88,20.88Z M316.75,20.38L311.88,20.12L311.12,20.50L311.00,36.12L310.62,36.62L309.88,36.25L308.88,34.38L307.00,32.25L298.50,20.88L297.50,20.25L293.00,20.25L292.38,20.62L292.25,47.62L292.62,48.12L297.62,48.25L298.25,47.62L298.38,31.50L298.75,31.50L299.88,32.38L301.12,34.38L311.50,47.88L312.38,48.25L316.50,48.25L316.88,47.88L317.00,20.88Z M256.38,20.25L256.00,20.88L256.12,48.00L256.75,48.38L275.50,48.25L276.00,47.62L276.00,43.25L275.62,42.88L263.12,42.88L262.38,42.38L262.25,21.00L261.62,20.25Z M370.12,20.00L366.38,21.25L363.25,24.38L362.75,26.00L362.62,27.62L362.25,28.25L363.00,32.12L364.50,34.00L366.88,35.62L368.88,36.12L370.38,36.88L372.50,37.12L373.62,37.75L375.00,38.00L376.62,39.00L377.25,40.25L377.00,41.62L375.75,42.88L372.25,43.25L369.62,42.75L367.75,41.88L365.50,40.12L364.88,40.12L362.12,43.12L361.50,44.50L364.38,46.62L366.00,47.12L367.12,47.88L372.12,48.88L375.62,48.62L379.00,47.62L380.38,46.75L381.88,45.25L382.88,43.50L383.25,41.75L383.25,38.25L382.88,36.62L381.75,35.00L379.50,33.25L378.12,32.88L376.50,32.00L375.12,31.88L373.25,31.12L371.25,30.75L369.50,29.88L368.88,29.12L368.62,27.50L369.00,26.62L369.88,25.88L370.88,25.62L373.62,25.62L375.75,26.12L378.50,27.75L379.50,28.00L381.75,25.00L382.38,23.50L380.75,22.12L378.38,21.00L374.75,20.00Z M279.38,20.00L279.00,20.38L279.00,48.50L279.38,48.88L286.50,48.88L286.88,48.50L286.88,20.38L286.50,20.00Z M490.00,20.00L486.25,21.12L483.00,23.12L480.25,26.12L479.00,28.38L478.00,31.38L478.00,37.50L479.00,40.50L479.88,41.75L480.00,42.38L482.12,44.88L484.38,46.62L486.50,47.75L489.62,48.62L494.50,48.88L498.75,47.75L500.75,46.75L503.25,44.75L505.88,41.50L506.00,40.75L506.75,39.62L507.62,35.62L507.62,33.12L506.75,29.00L504.75,25.50L502.62,23.25L499.25,21.12L497.38,20.75L496.12,20.12L492.88,19.88Z M489.75,26.00L493.62,25.62L495.75,26.12L497.38,27.00L499.00,28.50L499.88,29.62L500.12,30.62L500.88,31.75L500.88,37.12L499.75,39.38L497.25,41.88L496.25,42.12L495.25,42.88L491.00,43.00L488.25,41.88L486.00,39.75L485.00,38.00L484.88,37.00L484.25,35.75L484.25,33.12L485.12,30.38L486.12,28.75L487.75,27.12Z M457.00,20.00L453.12,21.12L452.12,21.88L451.50,22.00L450.00,23.12L447.25,26.00L446.00,28.12L445.00,31.00L445.00,37.88L446.00,40.75L447.00,42.50L450.00,45.75L453.25,47.75L454.88,48.00L456.25,48.62L461.50,48.88L465.38,47.88L467.50,46.88L469.25,45.62L471.75,43.00L472.62,41.75L473.88,38.88L474.25,36.75L474.25,32.00L473.75,29.25L473.00,28.12L472.75,27.12L470.62,24.25L468.00,22.12L467.00,21.88L465.75,21.00L462.50,20.00Z M456.62,26.00L460.38,25.62L462.75,26.12L464.25,27.00L466.62,29.38L467.88,32.12L467.88,36.50L466.75,39.25L464.38,41.75L462.12,42.88L457.88,43.00L455.00,41.75L452.88,39.62L452.12,38.50L451.25,36.00L451.25,32.62L452.12,30.12L454.75,27.12Z M398.38,20.00L394.62,21.12L392.88,22.12L390.25,24.25L389.25,25.50L387.00,29.88L386.62,32.25L386.62,36.62L387.00,38.88L388.25,41.75L390.12,44.38L391.50,45.62L395.12,47.88L399.12,48.88L402.88,48.88L407.25,47.75L410.62,45.62L411.88,44.25L411.88,43.25L408.50,40.00L407.88,40.12L405.75,41.88L403.00,43.00L398.62,42.88L397.62,42.12L396.50,41.75L395.00,40.38L393.12,36.88L392.88,34.88L393.12,31.75L393.75,30.88L394.00,29.75L395.00,28.38L396.50,27.00L398.12,26.12L400.75,25.50L403.50,25.88L405.88,27.00L407.75,28.38L408.50,28.50L411.75,24.88L411.88,24.12L409.88,22.25L407.75,21.00L404.00,20.00Z" />
+                </svg>
+
+
+            </div>
+          
+        </div>
+
+        <!-- Impressum & Hinweise -->
+        <div class="flex flex-col sm:items-end gap-1.5 text-xs text-slate-600">
+            <div class="flex flex-wrap items-center gap-4">
+                <button type="button" onclick="document.getElementById('impressum-details').classList.toggle('hidden')"
+                    class="font-semibold text-slate-900 underline underline-offset-4 hover:text-blue-600 transition">
+                    Impressum &amp; Rechtliches
+                </button>
+                <span class="text-slate-300">|</span>
+                <span>Lokale Browser-Verarbeitung (keine Datenübertragung)</span>
+            </div>
+            <p class="text-[11px] text-slate-500">
+                Code-Entwicklung unterstützt durch KI-Assistenzsysteme.
+            </p>
+        </div>
+    </div>
+
+    <!-- Aufklappbarer Impressums-Block (nach § 5 ECG / § 25 MedienG) -->
+    <div id="impressum-details" class="hidden border-t border-slate-200 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 py-5 grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-slate-700">
+            <div>
+                <h3 class="font-bold text-slate-900 uppercase tracking-wider mb-1.5">Medieninhaber &amp; Herausgeber
+                </h3>
+                <p>Johannes Kepler Universität Linz</p>
+                <p>Altenberger Straße 69, 4040 Linz, Österreich</p>
+                <p class="mt-1 text-slate-500">Institut / Abteilung: School of Education /Physik Didaktik</p>
+            </div>
+            <div>
+                <h3 class="font-bold text-slate-900 uppercase tracking-wider mb-1.5">Kontakt</h3>
+                <p>Verantwortlich: Lana Ivanjek</p>
+                <p>Didaktische Umsetzung: Kerstin Lindmaier</p>
+                <p>Technische Umsetzung: Gregor Obermüller</p>
+                <p>E-Mail: <a href="mailto:name@jku.at" class="underline hover:text-blue-600">gregor.obermueller@jku.at</a></p>
+                <p>Web: <a href="https://www.jku.at" target="_blank" rel="noopener noreferrer"
+                        class="underline hover:text-blue-600">www.jku.at</a></p>
+            </div>
+            <div>
+                <h3 class="font-bold text-slate-900 uppercase tracking-wider mb-1.5">Datenschutz &amp; Hinweis</h3>
+                <p>Alle Kameraaufnahmen und Videodateien werden ausschließlich lokal im Arbeitsspeicher Ihres Endgeräts
+                    verarbeitet und nicht an Server übertragen.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
 </html>
